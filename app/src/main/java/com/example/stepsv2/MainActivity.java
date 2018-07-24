@@ -2,10 +2,12 @@ package com.example.stepsv2;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.support.annotation.IdRes;
 //import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.webkit.WebView;
 import android.widget.Toast;
 import android.app.Fragment;
 

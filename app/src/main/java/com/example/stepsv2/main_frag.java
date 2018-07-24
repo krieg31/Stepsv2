@@ -13,19 +13,20 @@ import android.widget.ImageView;
 
 public class main_frag extends Fragment{
 
-    private AnimationDrawable mAnimationDrawable;
     public Button start;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        getActivity().setContentView(R.layout.fragment_main_frag);
         View view = inflater.inflate(R.layout.fragment_main_frag,container, false);
-        ImageView imageView = getActivity().findViewById(R.id.imageView);
+
+        ImageView imageView = view.findViewById(R.id.imageView);
         imageView.setBackgroundResource(R.drawable.main_kotik);
-        Button button = view.findViewById(R.id.start);
-        mAnimationDrawable = (AnimationDrawable) imageView.getBackground();
+
+        AnimationDrawable mAnimationDrawable = (AnimationDrawable) imageView.getBackground();
         mAnimationDrawable.start();
+
+        Button button = view.findViewById(R.id.start);
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override

@@ -24,8 +24,8 @@ public class StartActivity extends AppCompatActivity{
     TextView tvLocationNet;
     TextView path;
     TextView speed;
-    Location s = new Location(LocationManager.GPS_PROVIDER);
-    Double meters=2.0;
+    float meters=0;
+    Location s;
 
     private LocationManager locationManager;
 
@@ -41,8 +41,12 @@ public class StartActivity extends AppCompatActivity{
         tvLocationNet = findViewById(R.id.tvLocationNet);
         path = findViewById(R.id.path);
         speed = findViewById(R.id.speed);
-
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+                s = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+
     }
 
 
@@ -52,8 +56,8 @@ public class StartActivity extends AppCompatActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
             {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,1, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10 * 1000,10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10 * 1000, 10, locationListener);
             }
             else{
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -76,9 +80,7 @@ public class StartActivity extends AppCompatActivity{
         @Override
         public void onLocationChanged(Location location) {
             speed.setText(String.valueOf(location.getSpeed()) + " м/с");
-            path.setText(String.valueOf(meters) + " м");
-            meters = meters + location.distanceTo(s);
-            s = location;
+            path.setText(String.valueOf(distance(location)) + " м");
         }
 
         @Override
@@ -101,6 +103,11 @@ public class StartActivity extends AppCompatActivity{
         }
     };
 
+    public float distance(Location location) {
+        meters = meters + location.distanceTo(s);
+        s = location;
+        return meters;
+    }
     private void checkEnabled() {
         tvEnabledGPS.setText("Enabled: " + locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
         tvEnabledNet.setText("Enabled: " + locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));

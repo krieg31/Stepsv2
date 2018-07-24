@@ -15,10 +15,6 @@
         custom:arc_progress="55"
         custom:arc_bottom_text="MEMORY"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="1st frag" />
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="100dp"

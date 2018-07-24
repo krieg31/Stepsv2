@@ -24,6 +24,8 @@ public class main_frag extends Fragment{
         ImageView imageView = getActivity().findViewById(R.id.imageView);
         imageView.setBackgroundResource(R.drawable.main_kotik);
         Button button = view.findViewById(R.id.start);
+        mAnimationDrawable = (AnimationDrawable) imageView.getBackground();
+        mAnimationDrawable.start();
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -33,8 +35,6 @@ public class main_frag extends Fragment{
                 getActivity().startActivity(myIntent);
             }
         });
-        mAnimationDrawable = (AnimationDrawable) imageView.getBackground();
-        mAnimationDrawable.start();
         return view;
 }
 }

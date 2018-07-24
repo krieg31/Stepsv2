@@ -1,10 +1,12 @@
 package com.example.stepsv2;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.annotation.IdRes;
 //import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.webkit.WebView;
@@ -18,7 +20,9 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends FragmentActivity {
 
-
+    private static final String[] LOCATION_PERMS={
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

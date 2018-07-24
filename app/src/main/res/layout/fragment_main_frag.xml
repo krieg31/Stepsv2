@@ -1,32 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="#214193"
     tools:context=".main_frag">
 
     <com.github.lzyzsd.circleprogress.ArcProgress
         android:id="@+id/arc_progress"
-        android:background="#214193"
         android:layout_width="300dp"
-        android:layout_gravity="center"
         android:layout_height="300dp"
-        custom:arc_progress="55"
-        custom:arc_bottom_text="MEMORY"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_x="58dp"
+        android:layout_y="77dp"
+        custom:arc_bottom_text="MEMORY"
+        custom:arc_progress="100"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        custom:layout_constraintBottom_toBottomOf="@+id/arc_progress"
+        custom:layout_constraintEnd_toEndOf="@+id/arc_progress"
+        custom:layout_constraintStart_toStartOf="@+id/arc_progress"
+        custom:layout_constraintTop_toTopOf="@+id/arc_progress" />
 
     <Button
         android:id="@+id/start"
+        android:layout_width="157dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/start"
+        custom:layout_constraintBottom_toTopOf="@+id/guideline3"
+        custom:layout_constraintEnd_toEndOf="parent"
+        custom:layout_constraintStart_toStartOf="parent"
+        custom:layout_constraintTop_toBottomOf="@+id/arc_progress" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:text="@string/start" />
+        android:orientation="horizontal"
+        custom:layout_constraintGuide_end="618dp" />
 
-</FrameLayout>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        custom:layout_constraintGuide_begin="478dp" />
+
+</android.support.constraint.ConstraintLayout>

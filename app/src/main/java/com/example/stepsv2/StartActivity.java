@@ -34,6 +34,11 @@ public class StartActivity extends AppCompatActivity{
     float check;
     Location s;
     boolean first=true;
+    boolean second=false;
+    double middle_x1;
+    double middle_y1;
+    double middle_x2;
+    double middle_y2;
 
     TextView textView ;
     Button start, pause, stop, lap ;
@@ -186,13 +191,17 @@ public class StartActivity extends AppCompatActivity{
         {
             s = location;
             first=false;
+            second=true;
         }
-        else
+        if(second)
         {
-            check = location.distanceTo(s);
-            if ((check<6)&&(check>1)&&(location.getAccuracy()<15)) {
-                meters+=check;
-            }
+            middle_x1=(s.getLatitude()+location.getLatitude())/2;
+            middle_y1=(s.getLongitude()+location.getLongitude())/2;
+            
+        }
+        else {
+            middle_x1=(s.getLatitude()+location.getLatitude())/2;
+            middle_y1=(s.getLongitude()+location.getLongitude())/2;
         }
         s = location;
         return meters;

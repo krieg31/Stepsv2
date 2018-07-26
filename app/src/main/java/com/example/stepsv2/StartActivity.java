@@ -24,8 +24,10 @@ public class StartActivity extends AppCompatActivity{
     TextView tvLocationNet;
     TextView path;
     TextView speed;
+    TextView accuracy;
     float meters=0;
     Location s;
+    boolean first=true;
 
     private LocationManager locationManager;
 
@@ -41,12 +43,8 @@ public class StartActivity extends AppCompatActivity{
         tvLocationNet = findViewById(R.id.tvLocationNet);
         path = findViewById(R.id.path);
         speed = findViewById(R.id.speed);
+        accuracy = findViewById(R.id.accuracy);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-                s = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        }
-
     }
 
 
@@ -56,8 +54,8 @@ public class StartActivity extends AppCompatActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
             {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10 * 1000,10, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10 * 1000, 10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000,10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
             }
             else{
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -81,6 +79,7 @@ public class StartActivity extends AppCompatActivity{
         public void onLocationChanged(Location location) {
             speed.setText(String.valueOf(location.getSpeed()) + " м/с");
             path.setText(String.valueOf(distance(location)) + " м");
+            accuracy.setText(String.valueOf(location.getAccuracy()));
         }
 
         @Override
@@ -104,7 +103,15 @@ public class StartActivity extends AppCompatActivity{
     };
 
     public float distance(Location location) {
-        meters = meters + location.distanceTo(s);
+        if(first)
+        {
+            s = location;
+            first=false;
+        }
+        else if (location.getAccuracy()<10)
+        {
+            meters = meters + location.distanceTo(s);
+        }
         s = location;
         return meters;
     }

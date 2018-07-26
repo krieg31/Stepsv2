@@ -18,9 +18,6 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends FragmentActivity {
 
-    private static final String[] LOCATION_PERMS={
-            Manifest.permission.ACCESS_FINE_LOCATION
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

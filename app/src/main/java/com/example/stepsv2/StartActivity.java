@@ -56,7 +56,8 @@ public class StartActivity extends AppCompatActivity{
         speed = findViewById(R.id.speed);
         accuracy = findViewById(R.id.accuracy);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//
+
+//    //Stopwatch////////////////////////////////////////////////////////////////////////////////
         textView = findViewById(R.id.textView);
         start = findViewById(R.id.Start);
         pause = findViewById(R.id.Pause);
@@ -129,7 +130,7 @@ public class StartActivity extends AppCompatActivity{
             handler.postDelayed(this, 0);
         }
     };
-
+    //Stopwatch//////////////////////////////////////////////////////////////////////
 
     @Override
     protected void onResume() {

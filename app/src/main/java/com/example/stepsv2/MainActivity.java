@@ -12,10 +12,6 @@ import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 public class MainActivity extends FragmentActivity {
-<<<<<<< HEAD
-=======
-
->>>>>>> GPS
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -26,6 +26,7 @@ public class StartActivity extends AppCompatActivity{
     TextView speed;
     TextView accuracy;
     float meters=0;
+    float check;
     Location s;
     boolean first=true;
 
@@ -54,8 +55,7 @@ public class StartActivity extends AppCompatActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
             {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000,10, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0, locationListener);
             }
             else{
                 if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -108,9 +108,11 @@ public class StartActivity extends AppCompatActivity{
             s = location;
             first=false;
         }
-        else if (location.getAccuracy()<10)
+        else
         {
-            meters = meters + location.distanceTo(s);
+            check = location.distanceTo(s);
+            if (check<6)
+                meters+=check;
         }
         s = location;
         return meters;

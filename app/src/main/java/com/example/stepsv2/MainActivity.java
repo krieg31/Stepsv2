@@ -30,11 +30,8 @@ public class MainActivity extends FragmentActivity {
                     case R.id.tab_history:
                         fragment = new second_frag();
                         break;
-                    case R.id.tab_about:
-                        fragment = new third_frag();
-                        break;
-                    case R.id.tab_settings:
-                        fragment = new settings_frag();
+                    case R.id.tab_challenge:
+                        fragment = new challenge_frag();
                         break;
                     default:
                         fragment = new main_frag();

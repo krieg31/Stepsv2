@@ -9,12 +9,8 @@
         icon="@drawable/ic_dashboard_black_24dp"
         title="Nearby" />
     <tab
-        id="@+id/tab_about"
+        id="@+id/tab_challenge"
         icon="@drawable/ic_notifications_black_24dp"
         title="Friends" />
-    <tab
-        id="@+id/tab_settings"
-        icon="@drawable/ic_settings_black_24dp"
-        title="Settings" />
 
 </tabs>

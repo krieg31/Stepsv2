@@ -2,9 +2,17 @@ package com.example.stepsv2;
 
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,16 +20,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class StartActivity extends AppCompatActivity{
-    TextView tvEnabledGPS;
-    TextView tvStatusGPS;
-    TextView tvLocationGPS;
-    TextView tvEnabledNet;
-    TextView tvStatusNet;
-    TextView tvLocationNet;
     TextView path;
     TextView speed;
     TextView accuracy;
@@ -30,23 +35,100 @@ public class StartActivity extends AppCompatActivity{
     Location s;
     boolean first=true;
 
+    TextView textView ;
+    Button start, pause, stop, lap ;
+    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    Handler handler;
+    int Seconds, Minutes, MilliSeconds ;
+    ListView listView ;
+    String[] ListElements = new String[] {  };
+    List<String> ListElementsArrayList ;
+    ArrayAdapter<String> adapter ;
+
+
     private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        tvEnabledGPS = findViewById(R.id.tvEnabledGPS);
-        tvStatusGPS = findViewById(R.id.tvStatusGPS);
-        tvLocationGPS = findViewById(R.id.tvLocationGPS);
-        tvEnabledNet = findViewById(R.id.tvEnabledNet);
-        tvStatusNet = findViewById(R.id.tvStatusNet);
-        tvLocationNet = findViewById(R.id.tvLocationNet);
         path = findViewById(R.id.path);
         speed = findViewById(R.id.speed);
         accuracy = findViewById(R.id.accuracy);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//
+        textView = findViewById(R.id.textView);
+        start = findViewById(R.id.Start);
+        pause = findViewById(R.id.Pause);
+        stop = findViewById(R.id.Stop);
+        handler = new Handler() ;
+        ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
+        adapter = new ArrayAdapter<String>(StartActivity.this,
+                android.R.layout.simple_list_item_1,
+                ListElementsArrayList
+        );
+
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                StartTime = SystemClock.uptimeMillis();
+                handler.postDelayed(runnable, 0);
+
+                stop.setEnabled(false);
+
+            }
+        });
+
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                TimeBuff += MillisecondTime;
+
+                handler.removeCallbacks(runnable);
+
+                stop.setEnabled(true);
+
+            }
+        });
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MillisecondTime = 0L ;
+                StartTime = 0L ;
+                TimeBuff = 0L ;
+                UpdateTime = 0L ;
+                Seconds = 0 ;
+                Minutes = 0 ;
+                MilliSeconds = 0 ;
+                textView.setText("00:00:00");
+                ListElementsArrayList.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
+    public Runnable runnable = new Runnable() {
+
+        public void run() {
+
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+            UpdateTime = TimeBuff + MillisecondTime;
+            Seconds = (int) (UpdateTime / 1000);
+            Minutes = Seconds / 60;
+            Seconds = Seconds % 60;
+            MilliSeconds = (int) (UpdateTime % 1000);
+            textView.setText("" + Minutes + ":"
+                    + String.format("%02d", Seconds) + ":"
+                    + String.format("%03d", MilliSeconds));
+
+            handler.postDelayed(this, 0);
+        }
+    };
 
 
     @Override
@@ -64,7 +146,7 @@ public class StartActivity extends AppCompatActivity{
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PackageManager.PERMISSION_GRANTED);
             }
         }
-        checkEnabled();
+
     }
 
     @Override
@@ -84,21 +166,17 @@ public class StartActivity extends AppCompatActivity{
 
         @Override
         public void onProviderDisabled(String provider) {
-            checkEnabled();
+
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            checkEnabled();
+
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            if (provider.equals(LocationManager.GPS_PROVIDER)) {
-                tvStatusGPS.setText("Status: " + String.valueOf(status));
-            } else if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
-                tvStatusNet.setText("Status: " + String.valueOf(status));
-            }
+
         }
     };
 
@@ -111,19 +189,11 @@ public class StartActivity extends AppCompatActivity{
         else
         {
             check = location.distanceTo(s);
-            if (check<6)
+            if ((check<6)&&(check>1)&&(location.getAccuracy()<15)) {
                 meters+=check;
+            }
         }
         s = location;
         return meters;
     }
-    private void checkEnabled() {
-        tvEnabledGPS.setText("Enabled: " + locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
-        tvEnabledNet.setText("Enabled: " + locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
-    }
-
-    public void onClickLocationSettings(View view) {
-        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-    }
-
 }

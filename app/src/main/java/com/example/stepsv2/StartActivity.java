@@ -1,6 +1,7 @@
 package com.example.stepsv2;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,10 +21,10 @@ public class StartActivity extends AppCompatActivity{
     TextView speed;
     TextView accuracy;
     float meters=0;
-    float check;
     Location s;
     boolean first=true;
     boolean second=false;
+    boolean active=false;
     double middle_x1;
     double middle_y1;
     double middle_x2;
@@ -66,7 +67,8 @@ public class StartActivity extends AppCompatActivity{
 
                 stop.setEnabled(false);
                 start.setEnabled(false);
-
+                pause.setEnabled(true);
+                active=true;
             }
         });
 
@@ -79,8 +81,9 @@ public class StartActivity extends AppCompatActivity{
                 handler.removeCallbacks(runnable);
 
                 stop.setEnabled(true);
-                start.setEnabled(false);
-
+                start.setEnabled(true);
+                pause.setEnabled(false);
+                active=false;
             }
         });
 
@@ -95,14 +98,25 @@ public class StartActivity extends AppCompatActivity{
                 Seconds = 0 ;
                 Minutes = 0 ;
                 MilliSeconds = 0 ;
-                textView.setText("00:00:00");
+                textView.setText("0:00:00");
                 pause.setEnabled(false);
                 stop.setEnabled(false);
                 start.setEnabled(true);
+                active=false;
+                meters=0;
+                path.setText("0 м");
+                speed.setText("0 м/c");
                 //TODO: окошко "красавчик" с кнопкой "домой"
             }
         });
 
+    }
+    public void onClickStart(View v) {
+        startService(new Intent(this, MyService.class));
+    }
+
+    public void onClickStop(View v) {
+        stopService(new Intent(this, MyService.class));
     }
     public Runnable runnable = new Runnable() {
 
@@ -173,7 +187,7 @@ public class StartActivity extends AppCompatActivity{
     };
 
     public float distance(Location location) {
-        if (location.getAccuracy() < 15) {
+        if ((location.getAccuracy() < 15) && (active)) {
             if (first) {
                 s = location;
                 first = false;

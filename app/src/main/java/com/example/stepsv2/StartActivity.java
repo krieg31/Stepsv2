@@ -187,27 +187,27 @@ public class StartActivity extends AppCompatActivity{
     };
 
     public float distance(Location location) {
-        if(first)
-        {
-            s = location;
-            first=false;
-            second=true;
+        if (location.getAccuracy() < 15) {
+            if (first) {
+                s = location;
+                first = false;
+                second = true;
+            }
+            if (second) {
+                middle_x1 = (s.getLatitude() + location.getLatitude()) / 2;
+                middle_y1 = (s.getLongitude() + location.getLongitude()) / 2;
+                meters += distanceBetweenTwoPoint(s.getLatitude(), s.getLongitude(), middle_x1, middle_y1);
+                second = false;
+            }
+            else {
+                middle_x2 = (s.getLatitude() + location.getLatitude()) / 2;
+                middle_y2 = (s.getLongitude() + location.getLongitude()) / 2;
+                meters += distanceBetweenTwoPoint(middle_x1, middle_y1, middle_x2, middle_y2);
+                middle_x1 = middle_x2;
+                middle_y1 = middle_y2;
+                s = location;
+            } 
         }
-        if(second)
-        {
-            middle_x1=(s.getLatitude()+location.getLatitude())/2;
-            middle_y1=(s.getLongitude()+location.getLongitude())/2;
-            meters+=distanceBetweenTwoPoint(s.getLatitude(),s.getLongitude(),middle_x1,middle_y1);
-            second=false;
-        }
-        else {
-            middle_x2=(s.getLatitude()+location.getLatitude())/2;
-            middle_y2=(s.getLongitude()+location.getLongitude())/2;
-            meters+=distanceBetweenTwoPoint(middle_x1,middle_y1,middle_x2,middle_y2);
-            middle_x1=middle_x2;
-            middle_y1=middle_y2;
-        }
-        s = location;
         return meters;
     }
     double distanceBetweenTwoPoint(double srcLat, double srcLng, double desLat, double desLng) {

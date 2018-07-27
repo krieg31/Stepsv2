@@ -23,6 +23,11 @@ public class StartActivity extends AppCompatActivity{
     float check;
     Location s;
     boolean first=true;
+    boolean second=false;
+    double middle_x1;
+    double middle_y1;
+    double middle_x2;
+    double middle_y2;
 
     TextView textView ;
     Button start, pause, stop;
@@ -147,7 +152,7 @@ public class StartActivity extends AppCompatActivity{
         @Override
         public void onLocationChanged(Location location) {
             speed.setText(String.valueOf(location.getSpeed()) + " м/с");
-            path.setText(String.valueOf(distance(location)) + " м");
+            path.setText(String.valueOf(Math.round(distance(location))) + " м");
             accuracy.setText(String.valueOf(location.getAccuracy()));
         }
 
@@ -172,13 +177,21 @@ public class StartActivity extends AppCompatActivity{
         {
             s = location;
             first=false;
+            second=true;
         }
-        else
+        if(second)
         {
-            check = location.distanceTo(s);
-            if ((check<6)&&(check>1)&&(location.getAccuracy()<15)) {
-                meters+=check;
-            }
+            middle_x1=(s.getLatitude()+location.getLatitude())/2;
+            middle_y1=(s.getLongitude()+location.getLongitude())/2;
+            meters+=distanceBetweenTwoPoint(s.getLatitude(),s.getLongitude(),middle_x1,middle_y1);
+            second=false;
+        }
+        else {
+            middle_x2=(s.getLatitude()+location.getLatitude())/2;
+            middle_y2=(s.getLongitude()+location.getLongitude())/2;
+            meters+=distanceBetweenTwoPoint(middle_x1,middle_y1,middle_x2,middle_y2);
+            middle_x1=middle_x2;
+            middle_y1=middle_y2;
         }
         s = location;
         return meters;
@@ -196,8 +209,7 @@ public class StartActivity extends AppCompatActivity{
 
         double meterConversion = 1609;
 
-        return (int) (dist * meterConversion);
+        return (dist * meterConversion);
     }
-
 }
 

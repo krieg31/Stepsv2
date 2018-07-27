@@ -1,28 +1,17 @@
 package com.example.stepsv2;
 
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import android.Manifest;
-import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,14 +30,10 @@ public class StartActivity extends AppCompatActivity{
     double middle_y2;
 
     TextView textView ;
-    Button start, pause, stop, lap ;
+    Button start, pause, stop;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler handler;
     int Seconds, Minutes, MilliSeconds ;
-    ListView listView ;
-    String[] ListElements = new String[] {  };
-    List<String> ListElementsArrayList ;
-    ArrayAdapter<String> adapter ;
 
 
     private LocationManager locationManager;
@@ -67,12 +52,9 @@ public class StartActivity extends AppCompatActivity{
         start = findViewById(R.id.Start);
         pause = findViewById(R.id.Pause);
         stop = findViewById(R.id.Stop);
+        stop.setEnabled(false);
+        pause.setEnabled(false);
         handler = new Handler() ;
-        ListElementsArrayList = new ArrayList<String>(Arrays.asList(ListElements));
-        adapter = new ArrayAdapter<String>(StartActivity.this,
-                android.R.layout.simple_list_item_1,
-                ListElementsArrayList
-        );
 
 
         start.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +65,7 @@ public class StartActivity extends AppCompatActivity{
                 handler.postDelayed(runnable, 0);
 
                 stop.setEnabled(false);
+                start.setEnabled(false);
 
             }
         });
@@ -96,6 +79,7 @@ public class StartActivity extends AppCompatActivity{
                 handler.removeCallbacks(runnable);
 
                 stop.setEnabled(true);
+                start.setEnabled(false);
 
             }
         });
@@ -112,8 +96,10 @@ public class StartActivity extends AppCompatActivity{
                 Minutes = 0 ;
                 MilliSeconds = 0 ;
                 textView.setText("00:00:00");
-                ListElementsArrayList.clear();
-                adapter.notifyDataSetChanged();
+                pause.setEnabled(false);
+                stop.setEnabled(false);
+                start.setEnabled(true);
+                //TODO: окошко "красавчик" с кнопкой "домой"
             }
         });
 

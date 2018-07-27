@@ -166,7 +166,7 @@ public class StartActivity extends AppCompatActivity{
         @Override
         public void onLocationChanged(Location location) {
             speed.setText(String.valueOf(location.getSpeed()) + " м/с");
-            path.setText(String.valueOf(distance(location)) + " м");
+            path.setText(String.valueOf(Math.round(distance(location))) + " м");
             accuracy.setText(String.valueOf(location.getAccuracy()));
         }
 
@@ -223,7 +223,7 @@ public class StartActivity extends AppCompatActivity{
 
         double meterConversion = 1609;
 
-        return (int) (dist * meterConversion);
+        return (dist * meterConversion);
     }
 }
 

@@ -3,8 +3,6 @@ package com.example.stepsv2;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -24,17 +21,15 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
-import es.dmoral.toasty.Toasty;
-
 public class StartActivity extends AppCompatActivity {
     TextView path;
     TextView speed;
     TextView accuracy;
     float meters=0;
-    float check;
     Location s;
     boolean first=true;
     boolean second=false;
+    boolean active=false;
     double middle_x1;
     double middle_y1;
     double middle_x2;
@@ -82,7 +77,8 @@ public class StartActivity extends AppCompatActivity {
                 stop.setEnabled(false);
                 pause.setEnabled(true);
                 start.setEnabled(false);
-
+                pause.setEnabled(true);
+                active=true;
             }
         });
 
@@ -95,8 +91,9 @@ public class StartActivity extends AppCompatActivity {
                 handler.removeCallbacks(runnable);
 
                 stop.setEnabled(true);
-                start.setEnabled(false);
-
+                start.setEnabled(true);
+                pause.setEnabled(false);
+                active=false;
             }
         });
 
@@ -111,10 +108,14 @@ public class StartActivity extends AppCompatActivity {
                 Seconds = 0 ;
                 Minutes = 0 ;
                 MilliSeconds = 0 ;
-                textView.setText("00:00:00");
+                textView.setText("0:00:00");
                 pause.setEnabled(false);
                 stop.setEnabled(false);
                 start.setEnabled(true);
+                active=false;
+                meters=0;
+                path.setText("0 м");
+                speed.setText("0 м/c");
                 //TODO: окошко "красавчик" с кнопкой "домой"
                 AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
                 builder.setTitle("Выход")
@@ -133,6 +134,13 @@ public class StartActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void onClickStart(View v) {
+        startService(new Intent(this, MyService.class));
+    }
+
+    public void onClickStop(View v) {
+        stopService(new Intent(this, MyService.class));
     }
     public Runnable runnable = new Runnable() {
 
@@ -203,27 +211,27 @@ public class StartActivity extends AppCompatActivity {
     };
 
     public float distance(Location location) {
-        if(first)
-        {
-            s = location;
-            first=false;
-            second=true;
+        if ((location.getAccuracy() < 15) && (active)) {
+            if (first) {
+                s = location;
+                first = false;
+                second = true;
+            }
+            if (second) {
+                middle_x1 = (s.getLatitude() + location.getLatitude()) / 2;
+                middle_y1 = (s.getLongitude() + location.getLongitude()) / 2;
+                meters += distanceBetweenTwoPoint(s.getLatitude(), s.getLongitude(), middle_x1, middle_y1);
+                second = false;
+            }
+            else {
+                middle_x2 = (s.getLatitude() + location.getLatitude()) / 2;
+                middle_y2 = (s.getLongitude() + location.getLongitude()) / 2;
+                meters += distanceBetweenTwoPoint(middle_x1, middle_y1, middle_x2, middle_y2);
+                middle_x1 = middle_x2;
+                middle_y1 = middle_y2;
+                s = location;
+            } 
         }
-        if(second)
-        {
-            middle_x1=(s.getLatitude()+location.getLatitude())/2;
-            middle_y1=(s.getLongitude()+location.getLongitude())/2;
-            meters+=distanceBetweenTwoPoint(s.getLatitude(),s.getLongitude(),middle_x1,middle_y1);
-            second=false;
-        }
-        else {
-            middle_x2=(s.getLatitude()+location.getLatitude())/2;
-            middle_y2=(s.getLongitude()+location.getLongitude())/2;
-            meters+=distanceBetweenTwoPoint(middle_x1,middle_y1,middle_x2,middle_y2);
-            middle_x1=middle_x2;
-            middle_y1=middle_y2;
-        }
-        s = location;
         return meters;
     }
     double distanceBetweenTwoPoint(double srcLat, double srcLng, double desLat, double desLng) {

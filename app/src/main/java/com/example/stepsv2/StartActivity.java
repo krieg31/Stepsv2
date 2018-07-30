@@ -23,28 +23,15 @@ public class StartActivity extends AppCompatActivity{
     TextView path;
     TextView speed;
     TextView accuracy;
-    float meters=0;
-    Location s;
-    boolean first=true;
-    boolean second=false;
     boolean active=false;
-    double middle_x1;
-    double middle_y1;
-    double middle_x2;
-    double middle_y2;
-    public final static String PATH = "path";
-    public final static String SPEED = "speed";
-    public final static String BROADCAST_ACTION = "com.example.stepsv2";
-    BroadcastReceiver br;
+    BroadcastReceiver receiver;
+    Intent serviceIntent;
 
     TextView textView ;
     Button start, pause, stop;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler handler;
     int Seconds, Minutes, MilliSeconds ;
-
-
-    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +40,20 @@ public class StartActivity extends AppCompatActivity{
         path = findViewById(R.id.path);
         speed = findViewById(R.id.speed);
         accuracy = findViewById(R.id.accuracy);
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        br = new BroadcastReceiver() {
+
+        receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
+                String path_service = intent.getStringExtra("time");
+                String speed_service = intent.getStringExtra("speed");
+
+                path.setText(path_service);
+                speed.setText(speed_service);
             }
         };
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
-        registerReceiver(br, intFilt);
+        shouldShowRequestPermissionRationale()
+
 //    //Stopwatch////////////////////////////////////////////////////////////////////////////////
         textView = findViewById(R.id.textView);
         start = findViewById(R.id.Start);
@@ -117,7 +109,6 @@ public class StartActivity extends AppCompatActivity{
                 stop.setEnabled(false);
                 start.setEnabled(true);
                 active=false;
-                meters=0;
                 path.setText("0 м");
                 speed.setText("0 м/c");
                 //TODO: окошко "красавчик" с кнопкой "домой"
@@ -148,30 +139,25 @@ public class StartActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // дерегистрируем (выключаем) BroadcastReceiver
-        unregisterReceiver(br);
     }
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-            {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0, locationListener);
-            }
-            else{
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                    Toast.makeText(this,"Откройте доступ к местоположению",Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PackageManager.PERMISSION_GRANTED);
-            }
-        }
 
+        serviceIntent = new Intent(getApplicationContext(),
+                MyService.class);
+        startService(serviceIntent);
+
+        registerReceiver(receiver, new IntentFilter(
+                MyService.BROADCAST_ACTION));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        stopService(serviceIntent);
+        unregisterReceiver(receiver);
     }
 }
 

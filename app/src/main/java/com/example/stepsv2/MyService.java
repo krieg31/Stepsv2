@@ -48,7 +48,8 @@ public class MyService extends Service {
         @Override
         public void onLocationChanged(Location location) {
             intent.putExtra("path", meters);
-            intent.putExtra("speed", )
+            intent.putExtra("speed", location.getSpeed());
+            sendBroadcast(intent);
         }
 
         @Override

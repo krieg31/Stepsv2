@@ -1,7 +1,10 @@
 package com.example.stepsv2;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,6 +32,10 @@ public class StartActivity extends AppCompatActivity{
     double middle_y1;
     double middle_x2;
     double middle_y2;
+    public final static String PATH = "path";
+    public final static String SPEED = "speed";
+    public final static String BROADCAST_ACTION = "com.example.stepsv2";
+    BroadcastReceiver br;
 
     TextView textView ;
     Button start, pause, stop;
@@ -47,7 +54,14 @@ public class StartActivity extends AppCompatActivity{
         speed = findViewById(R.id.speed);
         accuracy = findViewById(R.id.accuracy);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
 
+            }
+        };
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        registerReceiver(br, intFilt);
 //    //Stopwatch////////////////////////////////////////////////////////////////////////////////
         textView = findViewById(R.id.textView);
         start = findViewById(R.id.Start);
@@ -111,13 +125,7 @@ public class StartActivity extends AppCompatActivity{
         });
 
     }
-    public void onClickStart(View v) {
-        startService(new Intent(this, MyService.class));
-    }
 
-    public void onClickStop(View v) {
-        stopService(new Intent(this, MyService.class));
-    }
     public Runnable runnable = new Runnable() {
 
         public void run() {
@@ -137,6 +145,12 @@ public class StartActivity extends AppCompatActivity{
     };
     //Stopwatch//////////////////////////////////////////////////////////////////////
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // дерегистрируем (выключаем) BroadcastReceiver
+        unregisterReceiver(br);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -158,72 +172,6 @@ public class StartActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
-        locationManager.removeUpdates(locationListener);
-    }
-
-    private LocationListener locationListener = new LocationListener() {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            speed.setText(String.valueOf(location.getSpeed()) + " м/с");
-            path.setText(String.valueOf(Math.round(distance(location))) + " м");
-            accuracy.setText(String.valueOf(location.getAccuracy()));
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-    };
-
-    public float distance(Location location) {
-        if ((location.getAccuracy() < 15) && (active)) {
-            if (first) {
-                s = location;
-                first = false;
-                second = true;
-            }
-            if (second) {
-                middle_x1 = (s.getLatitude() + location.getLatitude()) / 2;
-                middle_y1 = (s.getLongitude() + location.getLongitude()) / 2;
-                meters += distanceBetweenTwoPoint(s.getLatitude(), s.getLongitude(), middle_x1, middle_y1);
-                second = false;
-            }
-            else {
-                middle_x2 = (s.getLatitude() + location.getLatitude()) / 2;
-                middle_y2 = (s.getLongitude() + location.getLongitude()) / 2;
-                meters += distanceBetweenTwoPoint(middle_x1, middle_y1, middle_x2, middle_y2);
-                middle_x1 = middle_x2;
-                middle_y1 = middle_y2;
-                s = location;
-            } 
-        }
-        return meters;
-    }
-    double distanceBetweenTwoPoint(double srcLat, double srcLng, double desLat, double desLng) {
-        double earthRadius = 3958.75;
-        double dLat = Math.toRadians(desLat - srcLat);
-        double dLng = Math.toRadians(desLng - srcLng);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(srcLat))
-                * Math.cos(Math.toRadians(desLat)) * Math.sin(dLng / 2)
-                * Math.sin(dLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double dist = earthRadius * c;
-
-        double meterConversion = 1609;
-
-        return (dist * meterConversion);
     }
 }
 

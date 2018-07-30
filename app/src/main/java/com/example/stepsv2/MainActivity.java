@@ -2,6 +2,7 @@ package com.example.stepsv2;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -40,7 +41,7 @@ public class MainActivity extends FragmentActivity {
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment,fragment);
+                fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.commit();
             }
         });
@@ -52,4 +53,5 @@ public class MainActivity extends FragmentActivity {
             }
         });
     }
+
 }

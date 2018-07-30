@@ -1,6 +1,12 @@
 package com.example.stepsv2;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -9,13 +15,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StartActivity extends AppCompatActivity{
+import org.greenrobot.eventbus.EventBus;
+
+import es.dmoral.toasty.Toasty;
+
+public class StartActivity extends AppCompatActivity {
     TextView path;
     TextView speed;
     TextView accuracy;
@@ -34,6 +45,9 @@ public class StartActivity extends AppCompatActivity{
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler handler;
     int Seconds, Minutes, MilliSeconds ;
+    Fragment fragment;
+
+
 
 
     private LocationManager locationManager;
@@ -57,6 +71,7 @@ public class StartActivity extends AppCompatActivity{
         handler = new Handler() ;
 
 
+
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,6 +80,7 @@ public class StartActivity extends AppCompatActivity{
                 handler.postDelayed(runnable, 0);
 
                 stop.setEnabled(false);
+                pause.setEnabled(true);
                 start.setEnabled(false);
 
             }
@@ -100,6 +116,20 @@ public class StartActivity extends AppCompatActivity{
                 stop.setEnabled(false);
                 start.setEnabled(true);
                 //TODO: окошко "красавчик" с кнопкой "домой"
+                AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+                builder.setTitle("Выход")
+                        .setMessage("Красавчик, ты пробежал : "+Math.round(meters))
+                        .setCancelable(false)
+                        .setNegativeButton("Домой",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        EventBus.getDefault().post(new ChangeProgressEvent(Math.round(meters)));
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
             }
         });
 
@@ -210,6 +240,15 @@ public class StartActivity extends AppCompatActivity{
         double meterConversion = 1609;
 
         return (dist * meterConversion);
+    }
+
+    public static class ChangeProgressEvent {
+
+        public int progressmessage;
+
+        public ChangeProgressEvent(int progressmessage) {
+            this.progressmessage = progressmessage;
+        }
     }
 }
 

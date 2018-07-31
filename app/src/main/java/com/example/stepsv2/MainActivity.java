@@ -1,5 +1,5 @@
 package com.example.stepsv2;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -38,9 +38,10 @@ public class MainActivity extends FragmentActivity {
                         fragment = new main_frag();
                         break;
                 }
-
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+               // FragmentManager fragmentManager = getFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+               // FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.commit();
             }

@@ -1,13 +1,14 @@
 package com.example.stepsv2;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,9 @@ public class main_frag extends Fragment {
         imageView.setBackgroundResource(R.drawable.main_kotik);
         start = view.findViewById(R.id.start);
         arcProgress = view.findViewById(R.id.arc_progress);
+
+        ViewPager pager=view.findViewById(R.id.pager);
+        pager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
         EventBus.getDefault().register(this);
 

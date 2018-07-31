@@ -113,7 +113,6 @@ public class StartActivity extends AppCompatActivity {
                 stop.setEnabled(false);
                 start.setEnabled(true);
                 active=false;
-                meters=0;
                 path.setText("0 м");
                 speed.setText("0 м/c");
                 //TODO: окошко "красавчик" с кнопкой "домой"
@@ -183,6 +182,11 @@ public class StartActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         locationManager.removeUpdates(locationListener);
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        meters=0;
     }
 
     private LocationListener locationListener = new LocationListener() {

@@ -4,10 +4,27 @@
     android:layout_height="match_parent"
     tools:context=".daily">
 
-    <!-- TODO: Update blank fragment layout -->
-    <com.jjoe64.graphview.GraphView
+    <org.eazegraph.lib.charts.BarChart xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/graph"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:egBarWidth="20dp"
+        app:egEnableScroll="false"
+        app:egFixedBarWidth="true"
+        app:egLegendHeight="40dp" />
+
+    <org.eazegraph.lib.charts.ValueLineChart xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cubiclinechart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:egCurveSmoothness="0.4"
+        app:egIndicatorLineColor="#FE6DA8"
+        app:egLegendHeight="40dp"
+        app:egMaxXZoom="1"
+        app:egMaxYZoom="1"
+        app:egShowStandardValue="true"
+        app:egUseCubic="true"
+        app:egUseOverlapFill="true" />
 
 </FrameLayout>

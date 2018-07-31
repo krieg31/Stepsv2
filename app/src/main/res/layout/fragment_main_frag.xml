@@ -40,7 +40,7 @@
         custom:layout_constraintTop_toTopOf="@+id/arc_progress" />
 
     <Button
-        android:id="@+id/start"
+        android:id="@+id/Start"
         android:layout_width="157dp"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
@@ -63,7 +63,7 @@
         custom:layout_constraintBottom_toBottomOf="parent"
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
-        custom:layout_constraintTop_toBottomOf="@+id/start" />
+        custom:layout_constraintTop_toBottomOf="@+id/Start" />
 
 
 </android.support.constraint.ConstraintLayout>

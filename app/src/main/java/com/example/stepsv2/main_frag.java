@@ -1,6 +1,5 @@
 package com.example.stepsv2;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
@@ -46,7 +43,7 @@ public class main_frag extends Fragment {
 
         ImageView imageView = view.findViewById(R.id.imageView);
         imageView.setBackgroundResource(R.drawable.main_kotik);
-        start = view.findViewById(R.id.start);
+        start = view.findViewById(R.id.Start);
         arcProgress = view.findViewById(R.id.arc_progress);
 
         ViewPager pager=view.findViewById(R.id.pager);
@@ -100,7 +97,7 @@ public class main_frag extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void ChangeProgressEvent(StartActivity.ChangeProgressEvent event) {
         progress=event.progressmessage;
         progresum+=progress;
@@ -108,7 +105,7 @@ public class main_frag extends Fragment {
         SharedPreferences.Editor editor=mSettings.edit();
         editor.putInt(APP_PREFERENCES_CHALLENGE_PROGRESS, progresum);
         editor.apply();
-    }
+    }*/
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void ChangeMaxEvent(challenge_frag.ChangeMaxEvent event) {
         maxarc=event.maxmessage;

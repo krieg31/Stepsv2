@@ -1,259 +1,364 @@
 package com.example.stepsv2;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
+import android.preference.PreferenceManager;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
+import com.google.gson.Gson;
 
-public class StartActivity extends AppCompatActivity {
-    TextView path;
-    TextView speed;
-    TextView accuracy;
-    float meters=0;
-    Location s;
-    boolean first=true;
-    boolean second=false;
-    boolean active=false;
-    double middle_x1;
-    double middle_y1;
-    double middle_x2;
-    double middle_y2;
+import java.util.Locale;
 
-    TextView textView ;
-    Button start, pause, stop;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
-    Handler handler;
-    int Seconds, Minutes, MilliSeconds ;
-    Fragment fragment;
+public class StartActivity extends AppCompatActivity implements LocationListener, GpsStatus.Listener{
+    private SharedPreferences sharedPreferences;
+    private LocationManager mLocationManager;
+    private static Data data;
+    //private FloatingActionButton fab;
+    //private FloatingActionButton refresh;
+    private Button start;
+    private Button stop;
+    private TextView satellite;
+    private TextView status;
+    private TextView accuracy;
+    private TextView currentSpeed;
+    private TextView maxSpeed;
+    private TextView averageSpeed;
+    private TextView distance;
+    private Chronometer time;
+    private Data.onGpsServiceUpdate onGpsServiceUpdate;
 
-
-
-
-    private LocationManager locationManager;
+    private boolean firstfix;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        path = findViewById(R.id.path);
-        speed = findViewById(R.id.speed);
-        accuracy = findViewById(R.id.accuracy);
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-//    //Stopwatch////////////////////////////////////////////////////////////////////////////////
-        textView = findViewById(R.id.textView);
+        data = new Data(onGpsServiceUpdate);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //setTitle("");
         start = findViewById(R.id.Start);
-        pause = findViewById(R.id.Pause);
+
         stop = findViewById(R.id.Stop);
-        stop.setEnabled(false);
-        pause.setEnabled(false);
-        handler = new Handler() ;
 
-
-
-        start.setOnClickListener(new View.OnClickListener() {
+        onGpsServiceUpdate = new Data.onGpsServiceUpdate() {
             @Override
-            public void onClick(View view) {
+            public void update() {
+                double maxSpeedTemp = data.getMaxSpeed();
+                double distanceTemp = data.getDistance();
+                double averageTemp;
+                if (sharedPreferences.getBoolean("auto_average", false)) {
+                    averageTemp = data.getAverageSpeedMotion();
+                } else {
+                    averageTemp = data.getAverageSpeed();
+                }
 
-                StartTime = SystemClock.uptimeMillis();
-                handler.postDelayed(runnable, 0);
+                String speedUnits;
+                String distanceUnits;
+                if (sharedPreferences.getBoolean("miles_per_hour", false)) {
+                    maxSpeedTemp *= 0.62137119;
+                    distanceTemp = distanceTemp / 1000.0 * 0.62137119;
+                    averageTemp *= 0.62137119;
+                    speedUnits = "mi/h";
+                    distanceUnits = "mi";
+                } else {
+                    speedUnits = "km/h";
+                    if (distanceTemp <= 1000.0) {
+                        distanceUnits = "m";
+                    } else {
+                        distanceTemp /= 1000.0;
+                        distanceUnits = "km";
+                    }
+                }
 
-                stop.setEnabled(false);
-                pause.setEnabled(true);
-                start.setEnabled(false);
-                pause.setEnabled(true);
-                active=true;
+                SpannableString s = new SpannableString(String.format("%.0f", maxSpeedTemp) + speedUnits);
+                s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
+                maxSpeed.setText(s);
+
+                s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
+                s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
+                averageSpeed.setText(s);
+
+                s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
+                s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
+                distance.setText(s);
+            }
+        };
+
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        satellite = (TextView) findViewById(R.id.satellite);
+        status = (TextView) findViewById(R.id.status);
+        accuracy = (TextView) findViewById(R.id.accuracy);
+        maxSpeed = (TextView) findViewById(R.id.maxSpeed);
+        averageSpeed = (TextView) findViewById(R.id.averageSpeed);
+        distance = (TextView) findViewById(R.id.distance);
+        time = (Chronometer) findViewById(R.id.time);
+        currentSpeed = (TextView) findViewById(R.id.currentSpeed);
+
+        time.setText("00:00:00");
+        time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            boolean isPair = true;
+
+            @Override
+            public void onChronometerTick(Chronometer chrono) {
+                long time;
+                if (data.isRunning()) {
+                    time = SystemClock.elapsedRealtime() - chrono.getBase();
+                    data.setTime(time);
+                } else {
+                    time = data.getTime();
+                }
+
+                int h = (int) (time / 3600000);
+                int m = (int) (time - h * 3600000) / 60000;
+                int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+                String hh = h < 10 ? "0" + h : h + "";
+                String mm = m < 10 ? "0" + m : m + "";
+                String ss = s < 10 ? "0" + s : s + "";
+                chrono.setText(hh + ":" + mm + ":" + ss);
+
+                if (data.isRunning()) {
+                    chrono.setText(hh + ":" + mm + ":" + ss);
+                } else {
+                    if (isPair) {
+                        isPair = false;
+                        chrono.setText(hh + ":" + mm + ":" + ss);
+                    } else {
+                        isPair = true;
+                        chrono.setText("");
+                    }
+                }
+
             }
         });
-
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                TimeBuff += MillisecondTime;
-
-                handler.removeCallbacks(runnable);
-
-                stop.setEnabled(true);
-                start.setEnabled(true);
-                pause.setEnabled(false);
-                active=false;
-            }
-        });
-
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                MillisecondTime = 0L ;
-                StartTime = 0L ;
-                TimeBuff = 0L ;
-                UpdateTime = 0L ;
-                Seconds = 0 ;
-                Minutes = 0 ;
-                MilliSeconds = 0 ;
-                textView.setText("0:00:00");
-                pause.setEnabled(false);
-                stop.setEnabled(false);
-                start.setEnabled(true);
-                active=false;
-                path.setText("0 м");
-                speed.setText("0 м/c");
-                //TODO: окошко "красавчик" с кнопкой "домой"
-                AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
-                builder.setTitle("Выход")
-                        .setMessage("Красавчик, ты пробежал : "+Math.round(meters))
-                        .setCancelable(false)
-                        .setNegativeButton("Домой",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        EventBus.getDefault().post(new ChangeProgressEvent(Math.round(meters)));
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-            }
-        });
-
-    }
-    public void onClickStart(View v) {
-        startService(new Intent(this, MyService.class));
     }
 
-    public void onClickStop(View v) {
-        stopService(new Intent(this, MyService.class));
-    }
-    public Runnable runnable = new Runnable() {
-
-        public void run() {
-
-            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
-            UpdateTime = TimeBuff + MillisecondTime;
-            Seconds = (int) (UpdateTime / 1000);
-            Minutes = Seconds / 60;
-            Seconds = Seconds % 60;
-            MilliSeconds = (int) (UpdateTime % 1000);
-            textView.setText("" + Minutes + ":"
-                    + String.format("%02d", Seconds) + ":"
-                    + String.format("%03d", MilliSeconds));
-
-            handler.postDelayed(this, 0);
+    public void onStartClick(View v) {
+        if (!data.isRunning()) {
+            data.setRunning(true);
+            time.setBase(SystemClock.elapsedRealtime() - data.getTime());
+            time.start();
+            data.setFirstTime(true);
+            startService(new Intent(getBaseContext(), MyService.class));
+        } else {
+            data.setRunning(false);
+            status.setText("");
+            stopService(new Intent(getBaseContext(), MyService.class));
         }
-    };
-    //Stopwatch//////////////////////////////////////////////////////////////////////
+    }
+
+    public void onStopClick(View v) {
+        resetData();
+        stopService(new Intent(getBaseContext(), MyService.class));
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-            {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0, locationListener);
-            }
-            else{
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                    Toast.makeText(this,"Откройте доступ к местоположению",Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PackageManager.PERMISSION_GRANTED);
-            }
+        firstfix = true;
+        if (!data.isRunning()) {
+            Gson gson = new Gson();
+            String json = sharedPreferences.getString("data", "");
+            data = gson.fromJson(json, Data.class);
+        }
+        if (data == null) {
+            data = new Data(onGpsServiceUpdate);
+        } else {
+            data.setOnGpsServiceUpdate(onGpsServiceUpdate);
         }
 
+        if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, (LocationListener) this);
+        } else {
+            Log.w("MainActivity", "No GPS location provider found. GPS data display will not be available.");
+        }
+
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "Vklychi GPS", Toast.LENGTH_LONG).show();
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mLocationManager.addGpsStatusListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        locationManager.removeUpdates(locationListener);
+        mLocationManager.removeUpdates(this);
+        mLocationManager.removeGpsStatusListener(this);
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        prefsEditor.putString("data", json);
+        prefsEditor.commit();
     }
+
     @Override
-    public void onStop(){
-        super.onStop();
-        meters=0;
+    public void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(getBaseContext(), MyService.class));
     }
 
-    private LocationListener locationListener = new LocationListener() {
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location.hasAccuracy()) {
+            SpannableString s = new SpannableString(String.format("%.0f", location.getAccuracy()) + "m");
+            s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
+            accuracy.setText(s);
 
-        @Override
-        public void onLocationChanged(Location location) {
-            speed.setText(String.valueOf(location.getSpeed()) + " м/с");
-            path.setText(String.valueOf(Math.round(distance(location))) + " м");
-            accuracy.setText(String.valueOf(location.getAccuracy()));
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-    };
-
-    public float distance(Location location) {
-        if ((location.getAccuracy() < 15) && (active)) {
-            if (first) {
-                s = location;
-                first = false;
-                second = true;
+            if (firstfix) {
+                status.setText("");
+                firstfix = false;
             }
-            if (second) {
-                middle_x1 = (s.getLatitude() + location.getLatitude()) / 2;
-                middle_y1 = (s.getLongitude() + location.getLongitude()) / 2;
-                meters += distanceBetweenTwoPoint(s.getLatitude(), s.getLongitude(), middle_x1, middle_y1);
-                second = false;
-            }
-            else {
-                middle_x2 = (s.getLatitude() + location.getLatitude()) / 2;
-                middle_y2 = (s.getLongitude() + location.getLongitude()) / 2;
-                meters += distanceBetweenTwoPoint(middle_x1, middle_y1, middle_x2, middle_y2);
-                middle_x1 = middle_x2;
-                middle_y1 = middle_y2;
-                s = location;
-            } 
+        } else {
+            firstfix = true;
         }
-        return meters;
-    }
-    double distanceBetweenTwoPoint(double srcLat, double srcLng, double desLat, double desLng) {
-        double earthRadius = 3958.75;
-        double dLat = Math.toRadians(desLat - srcLat);
-        double dLng = Math.toRadians(desLng - srcLng);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-                + Math.cos(Math.toRadians(srcLat))
-                * Math.cos(Math.toRadians(desLat)) * Math.sin(dLng / 2)
-                * Math.sin(dLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double dist = earthRadius * c;
 
-        double meterConversion = 1609;
+        if (location.hasSpeed()) {
+            String speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6) + "km/h";
 
-        return (dist * meterConversion);
+            if (sharedPreferences.getBoolean("miles_per_hour", false)) { // Convert to MPH
+                speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6 * 0.62137119) + "mi/h";
+            }
+            SpannableString s = new SpannableString(speed);
+            s.setSpan(new RelativeSizeSpan(0.25f), s.length() - 4, s.length(), 0);
+            currentSpeed.setText(s);
+        }
+
     }
 
+    public void onGpsStatusChanged(int event) {
+        switch (event) {
+            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
+                int satsInView = 0;
+                int satsUsed = 0;
+                Iterable<GpsSatellite> sats = gpsStatus.getSatellites();
+                for (GpsSatellite sat : sats) {
+                    satsInView++;
+                    if (sat.usedInFix()) {
+                        satsUsed++;
+                    }
+                }
+                satellite.setText(String.valueOf(satsUsed) + "/" + String.valueOf(satsInView));
+                if (satsUsed == 0) {
+                    data.setRunning(false);
+                    status.setText("");
+                    stopService(new Intent(getBaseContext(), MyService.class));
+                    accuracy.setText("");
+                    status.setVisibility(View.VISIBLE);
+                    firstfix = true;
+                }
+                break;
+
+            case GpsStatus.GPS_EVENT_STOPPED:
+                if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    Toast.makeText(this,"Vklychi GPS",Toast.LENGTH_LONG).show();
+                }
+                break;
+            case GpsStatus.GPS_EVENT_FIRST_FIX:
+                break;
+        }
+    }
+
+   /* public void showGpsDisabledDialog(){
+        Dialog dialog = new Dialog(this, getResources().getString(R.string.gps_disabled), getResources().getString(R.string.please_enable_gps));
+
+        dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+            }
+        });
+        dialog.show();
+    }*/
+
+    public void resetData(){
+        time.stop();
+        maxSpeed.setText("");
+        averageSpeed.setText("");
+        distance.setText("");
+        time.setText("00:00:00");
+        data = new Data(onGpsServiceUpdate);
+    }
+
+    public static Data getData() {
+        return data;
+    }
+
+    public void onBackPressed(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {}
+
+    @Override
+    public void onProviderEnabled(String s) {}
+
+    @Override
+    public void onProviderDisabled(String s) {}
+/*
     public static class ChangeProgressEvent {
 
         public int progressmessage;
@@ -261,6 +366,6 @@ public class StartActivity extends AppCompatActivity {
         public ChangeProgressEvent(int progressmessage) {
             this.progressmessage = progressmessage;
         }
-    }
+    }*/
 }
 

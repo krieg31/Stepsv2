@@ -79,20 +79,13 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
                 String speedUnits;
                 String distanceUnits;
-                if (sharedPreferences.getBoolean("miles_per_hour", false)) {
-                    maxSpeedTemp *= 0.62137119;
-                    distanceTemp = distanceTemp / 1000.0 * 0.62137119;
-                    averageTemp *= 0.62137119;
-                    speedUnits = "mi/h";
-                    distanceUnits = "mi";
+
+                speedUnits = "км/ч";
+                if (distanceTemp <= 1000.0) {
+                    distanceUnits = "м";
                 } else {
-                    speedUnits = "km/h";
-                    if (distanceTemp <= 1000.0) {
-                        distanceUnits = "m";
-                    } else {
-                        distanceTemp /= 1000.0;
-                        distanceUnits = "km";
-                    }
+                    distanceTemp /= 1000.0;
+                    distanceUnits = "км";
                 }
 
                 SpannableString s = new SpannableString(String.format("%.0f", maxSpeedTemp) + speedUnits);
@@ -208,36 +201,15 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         } else {
             data.setOnGpsServiceUpdate(onGpsServiceUpdate);
         }
-
+        
         if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, (LocationListener) this);
         } else {
             Log.w("MainActivity", "No GPS location provider found. GPS data display will not be available.");
         }
 
         if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(this, "Vklychi GPS", Toast.LENGTH_LONG).show();
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+            Toast.makeText(this, R.string.please_enable_gps, Toast.LENGTH_LONG).show();
         }
         mLocationManager.addGpsStatusListener(this);
     }
@@ -263,7 +235,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     @Override
     public void onLocationChanged(Location location) {
         if (location.hasAccuracy()) {
-            SpannableString s = new SpannableString(String.format("%.0f", location.getAccuracy()) + "m");
+            SpannableString s = new SpannableString(String.format("%.0f", location.getAccuracy()) + "м");
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
             accuracy.setText(s);
 
@@ -276,11 +248,8 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         }
 
         if (location.hasSpeed()) {
-            String speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6) + "km/h";
+            String speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6) + "км/ч";
 
-            if (sharedPreferences.getBoolean("miles_per_hour", false)) { // Convert to MPH
-                speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6 * 0.62137119) + "mi/h";
-            }
             SpannableString s = new SpannableString(speed);
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - 4, s.length(), 0);
             currentSpeed.setText(s);
@@ -324,7 +293,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
             case GpsStatus.GPS_EVENT_STOPPED:
                 if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Toast.makeText(this,"Vklychi GPS",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this,R.string.please_enable_gps,Toast.LENGTH_LONG).show();
                 }
                 break;
             case GpsStatus.GPS_EVENT_FIRST_FIX:

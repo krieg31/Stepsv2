@@ -1,20 +1,17 @@
 package com.example.stepsv2;
 
-import android.app.Service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.GpsStatus;
-import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 public class MyService extends Service implements LocationListener, GpsStatus.Listener {
     private LocationManager mLocationManager;
@@ -33,7 +30,7 @@ public class MyService extends Service implements LocationListener, GpsStatus.Li
     @Override
     public void onCreate() {
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, StartActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         contentIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent, 0);
@@ -86,7 +83,7 @@ public class MyService extends Service implements LocationListener, GpsStatus.Li
                 .setContentIntent(contentIntent);
 
         if(asData){
-            builder.setContentText(String.format(getString(R.string.notification), data.getMaxSpeed(), data.getDistance()));
+            builder.setContentText(String.format(getString(R.string.notification), Math.round(data.getMaxSpeed()), Math.round(data.getDistance())));
         }else{
             builder.setContentText(String.format(getString(R.string.notification), '-', '-'));
         }

@@ -12,6 +12,7 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -201,18 +202,23 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         } else {
             data.setOnGpsServiceUpdate(onGpsServiceUpdate);
         }
-        
-        if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, (LocationListener) this);
-        } else {
-            Log.w("MainActivity", "No GPS location provider found. GPS data display will not be available.");
-        }
 
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(this, R.string.please_enable_gps, Toast.LENGTH_LONG).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
+            {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,500,0, (LocationListener) this);
+            }
+            else{
+                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
+                    Toast.makeText(this,"Откройте доступ к местоположению",Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PackageManager.PERMISSION_GRANTED);
+            }
         }
         mLocationManager.addGpsStatusListener(this);
     }
+
+
 
     @Override
     protected void onPause() {

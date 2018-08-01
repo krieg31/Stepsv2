@@ -29,17 +29,17 @@
 
     <TextView
         android:id="@+id/titleMaxSpeed"
-        android:text="Max speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/toolbarSpeed"
-        android:layout_marginTop="20dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/toolbarSpeed"
         android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:text="Макс. скорость"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/maxSpeed"
@@ -67,17 +67,17 @@
 
     <TextView
         android:id="@+id/titleAverageSpeed"
-        android:text="Srednya skorost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator1"
-        android:layout_marginTop="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/separator1"
         android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="Средняя скорость"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/averageSpeed"
@@ -105,17 +105,17 @@
 
     <TextView
         android:id="@+id/titleDistance"
-        android:text="Distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator2"
-        android:layout_marginTop="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/separator2"
         android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="Пройдено"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/distance"
@@ -143,17 +143,17 @@
 
     <TextView
         android:id="@+id/titleTime"
-        android:text="Time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator3"
-        android:layout_marginTop="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/separator3"
         android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="Время"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <Chronometer
         android:id="@+id/time"
@@ -181,17 +181,17 @@
 
     <TextView
         android:id="@+id/titleAccuracy"
-        android:text="Accuracy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator4"
-        android:layout_marginTop="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@id/separator4"
         android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:text="Точность"
+        android:textColor="@android:color/black"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/accuracy"
@@ -217,16 +217,16 @@
 
     <TextView
         android:id="@+id/titleSatellite"
-        android:text="Sputniki"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@android:color/black"
         android:layout_below="@id/separator4"
-        android:layout_toRightOf="@id/separator5"
-        android:layout_marginTop="16dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@id/separator5"
+        android:text="Спутники"
+        android:textColor="@android:color/black"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/satellite"
@@ -279,6 +279,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/status"
+        android:onClick="onStopClick"
         android:text="Stop" />
 
 </RelativeLayout>

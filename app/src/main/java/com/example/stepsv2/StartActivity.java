@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -202,20 +203,33 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         } else {
             data.setOnGpsServiceUpdate(onGpsServiceUpdate);
         }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-            {
-                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,500,0, (LocationListener) this);
+            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
             }
             else{
-                if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)){
-                    Toast.makeText(this,"Откройте доступ к местоположению",Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},PackageManager.PERMISSION_GRANTED);
+            if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+            } else {
+                Toast.makeText(this,"Не удаётся подключиться к GPS",Toast.LENGTH_SHORT).show();
+            }
+
+            if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Toast.makeText(this,"Включите GPS",Toast.LENGTH_SHORT).show();
+            }
+            mLocationManager.addGpsStatusListener(this);
             }
         }
-        mLocationManager.addGpsStatusListener(this);
+        else{
+            if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
+                mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+            } else {
+                Toast.makeText(this,"Не удаётся подключиться к GPS",Toast.LENGTH_SHORT).show();
+            }
+            mLocationManager.addGpsStatusListener(this);
+        }
+
+
     }
 
 

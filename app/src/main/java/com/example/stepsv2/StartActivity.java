@@ -1,30 +1,25 @@
 package com.example.stepsv2;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -32,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Locale;
 
@@ -178,6 +175,23 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     public void onStopClick(View v) {
         resetData();
         stopService(new Intent(getBaseContext(), MyService.class));
+        AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+        builder.setTitle("Результат")
+                .setMessage("Ты пробежал : "+ distance.getText())
+                .setCancelable(false)
+                .setNegativeButton("Домой",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if(distance.getText()!="") {
+                                    EventBus.getDefault().post(new ChangeProgressEvent(0 + Math.round(Integer.valueOf(distance.getText().toString()))));
+                                }
+                                Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+                                startActivity(myIntent);
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -358,7 +372,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
     @Override
     public void onProviderDisabled(String s) {}
-/*
+
     public static class ChangeProgressEvent {
 
         public int progressmessage;
@@ -366,6 +380,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         public ChangeProgressEvent(int progressmessage) {
             this.progressmessage = progressmessage;
         }
-    }*/
+    }
 }
 

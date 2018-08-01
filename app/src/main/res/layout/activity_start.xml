@@ -279,6 +279,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/status"
+        android:onClick="onStopClick"
         android:text="Stop" />
 
 </RelativeLayout>

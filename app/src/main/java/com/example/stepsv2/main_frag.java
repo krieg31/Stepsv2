@@ -1,5 +1,6 @@
 package com.example.stepsv2;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class main_frag extends Fragment {
 
     public Button start;
+    public Button profile;
     ArcProgress arcProgress;
     int progress, maxarc ,progresum;
 
@@ -44,6 +46,9 @@ public class main_frag extends Fragment {
         ImageView imageView = view.findViewById(R.id.imageView);
         imageView.setBackgroundResource(R.drawable.main_kotik);
         start = view.findViewById(R.id.Start);
+        profile = view.findViewById(R.id.profile_btn);
+        profile.setVisibility(View.VISIBLE);
+        profile.setBackgroundColor(Color.TRANSPARENT);
         arcProgress = view.findViewById(R.id.arc_progress);
 
         ViewPager pager=view.findViewById(R.id.pager);
@@ -58,6 +63,13 @@ public class main_frag extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(getActivity(), StartActivity.class);
+                getActivity().startActivity(myIntent);
+            }
+        });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getActivity(), ProfileActivity.class);
                 getActivity().startActivity(myIntent);
             }
         });

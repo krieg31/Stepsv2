@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
@@ -64,6 +64,23 @@
         custom:layout_constraintEnd_toEndOf="parent"
         custom:layout_constraintStart_toStartOf="parent"
         custom:layout_constraintTop_toBottomOf="@+id/Start" />
+
+    <Button
+        android:id="@+id/profile_btn"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        custom:layout_constraintBottom_toBottomOf="@+id/arc_progress"
+        custom:layout_constraintEnd_toEndOf="@+id/arc_progress"
+        custom:layout_constraintStart_toStartOf="@+id/arc_progress"
+        custom:layout_constraintTop_toTopOf="@+id/arc_progress"
+        tools:layout_editor_absoluteX="90dp"
+        tools:layout_editor_absoluteY="84dp" />
 
 
 </android.support.constraint.ConstraintLayout>

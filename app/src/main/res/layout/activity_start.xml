@@ -6,47 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorAccent"
     android:keepScreenOn="true"
+    android:theme="@style/AppTheme"
     materialdesign:layout_editor_absoluteY="50dp">
-
-    <RelativeLayout
-        android:id="@+id/toolbarSpeed"
-        android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/accuracy"
-        android:layout_gravity="center"
-        android:background="@color/colorPrimary"
-        android:elevation="5dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/currentSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@android:color/white"
-            android:textSize="100sp"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/maxSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/toolbarSpeed"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="16dp"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/titleAverageSpeed"
@@ -54,33 +15,35 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/titleDistance"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="88dp"
-        android:text="SPEED"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/speed"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        fab:layout_constraintTop_toBottomOf="@+id/currentSpeed" />
 
     <TextView
         android:id="@+id/titleDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         android:layout_toEndOf="@+id/Stop"
-        android:text="KM"
+        android:text="@string/distance"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        fab:layout_constraintHorizontal_bias="1.0"
+        fab:layout_constraintStart_toEndOf="@+id/titleAverageSpeed"
+        fab:layout_constraintTop_toBottomOf="@+id/distance" />
 
     <TextView
         android:id="@+id/titleTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbarSpeed"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="Время"
@@ -91,94 +54,53 @@
         fab:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/titleAccuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/Start"
-        android:layout_below="@+id/titleSatellite"
-        android:text="Точность"
-        android:textColor="@android:color/black"
-        android:textSize="17sp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/accuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/titleAccuracy"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="17sp" />
-
-    <TextView
-        android:id="@+id/titleSatellite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/Stop"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="126dp"
-        android:text="Спутники"
-        android:textColor="@android:color/black"
-        android:textSize="17sp"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/satellite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/titleSatellite"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="17sp" />
-
-    <TextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Waiting for fix"
+        android:layout_marginTop="12dp"
+        android:text="@string/waiting_for_fix"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="15sp"
-        fab:layout_constraintBottom_toBottomOf="parent"
         fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintStart_toStartOf="parent" />
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/titleAverageSpeed" />
 
     <Button
         android:id="@+id/Start"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/circle_button"
+        android:text="GO!"
+        android:textSize="24dp"
         android:onClick="onStartClick"
-        android:text="Start"
-        fab:layout_constraintBottom_toTopOf="@+id/status"
+        fab:layout_constraintBottom_toBottomOf="parent"
         fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintStart_toStartOf="parent" />
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/status"
+        fab:layout_constraintVertical_bias="0.333" />
 
     <Button
         android:id="@+id/Stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="28dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/status"
+        android:background="@drawable/circle_button"
         android:onClick="onStopClick"
-        android:text="Stop"
+        android:text="STOP"
+        android:textSize="14sp"
         fab:layout_constraintBottom_toBottomOf="parent"
         fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintHorizontal_bias="0.848"
-        fab:layout_constraintStart_toStartOf="parent" />
+        fab:layout_constraintHorizontal_bias="0.037"
+        fab:layout_constraintStart_toEndOf="@+id/Start" />
 
     <Chronometer
         android:id="@+id/time"
@@ -195,18 +117,18 @@
         fab:layout_constraintStart_toStartOf="parent"
         fab:layout_constraintTop_toBottomOf="@+id/titleTime" />
 
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="212dp"
         android:layout_below="@+id/time"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
+        android:src="@drawable/run"
         fab:layout_constraintEnd_toEndOf="parent"
         fab:layout_constraintHorizontal_bias="0.0"
         fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toBottomOf="@+id/time"
-        fab:srcCompat="@drawable/eighth" />
+        fab:layout_constraintTop_toBottomOf="@+id/time" />
 
     <TextView
         android:id="@+id/distance"
@@ -214,38 +136,28 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/titleDistance"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text=""
         android:textColor="@android:color/black"
-        android:textSize="40sp"
-        fab:layout_constraintBottom_toTopOf="@+id/titleDistance"
+        android:textSize="24sp"
         fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintHorizontal_bias="0.83"
+        fab:layout_constraintHorizontal_bias="0.848"
         fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toBottomOf="@+id/imageView2"
-        fab:layout_constraintVertical_bias="0.277" />
+        fab:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
-        android:id="@+id/averageSpeed"
+        android:id="@+id/currentSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/titleAverageSpeed"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="40sp"
-        fab:layout_constraintBottom_toTopOf="@+id/titleAverageSpeed"
+        android:layout_marginTop="24dp"
+        android:textSize="24sp"
         fab:layout_constraintEnd_toEndOf="parent"
-        fab:layout_constraintHorizontal_bias="0.2"
+        fab:layout_constraintHorizontal_bias="0.174"
         fab:layout_constraintStart_toStartOf="parent"
-        fab:layout_constraintTop_toBottomOf="@+id/imageView2"
-        fab:layout_constraintVertical_bias="1.0" />
+        fab:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
 </android.support.constraint.ConstraintLayout>

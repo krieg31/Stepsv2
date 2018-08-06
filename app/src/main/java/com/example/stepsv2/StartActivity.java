@@ -16,12 +16,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -31,8 +28,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Locale;
 
@@ -42,12 +37,8 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private static Data data;
     private Button start;
     private Button stop;
-    private TextView satellite;
     private TextView status;
-    private TextView accuracy;
     private TextView currentSpeed;
-    private TextView maxSpeed;
-    private TextView averageSpeed;
     private TextView distance;
     private Chronometer time;
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
@@ -62,7 +53,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
         data = new Data(onGpsServiceUpdate);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //setTitle("");
+
         start = findViewById(R.id.Start);
 
         stop = findViewById(R.id.Stop);
@@ -82,21 +73,19 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 String speedUnits;
                 String distanceUnits;
 
-                speedUnits = "км/ч";
+                speedUnits = " км/ч";
                 if (distanceTemp <= 1000.0) {
-                    distanceUnits = "м";
+                    distanceUnits = " м";
                 } else {
                     distanceTemp /= 1000.0;
-                    distanceUnits = "км";
+                    distanceUnits = " км";
                 }
 
                 SpannableString s = new SpannableString(String.format("%.0f", maxSpeedTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
-                maxSpeed.setText(s);
 
                 s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
-                averageSpeed.setText(s);
 
                 senddata+=Math.round(distanceTemp);
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
@@ -107,11 +96,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        satellite = findViewById(R.id.satellite);
         status = findViewById(R.id.status);
-        accuracy = findViewById(R.id.accuracy);
-        maxSpeed = findViewById(R.id.maxSpeed);
-        averageSpeed = findViewById(R.id.averageSpeed);
         distance = findViewById(R.id.distance);
         time = findViewById(R.id.time);
         currentSpeed = findViewById(R.id.currentSpeed);
@@ -157,12 +142,14 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     public void onStartClick(View v) {
         if (!data.isRunning()) {
             data.setRunning(true);
+            start.setText("Pause");
             time.setBase(SystemClock.elapsedRealtime() - data.getTime());
             time.start();
             data.setFirstTime(true);
             startService(new Intent(getBaseContext(), MyService.class));
         } else {
             data.setRunning(false);
+            start.setText("GO!");
             status.setText("");
             stopService(new Intent(getBaseContext(), MyService.class));
         }
@@ -256,7 +243,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         if (location.hasAccuracy()) {
             SpannableString s = new SpannableString(String.format("%.0f", location.getAccuracy()) + "м");
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
-            accuracy.setText(s);
 
             if (firstfix) {
                 status.setText("");
@@ -279,16 +265,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     public void onGpsStatusChanged(int event) {
         switch (event) {
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
                 GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
                 int satsInView = 0;
                 int satsUsed = 0;
@@ -299,12 +275,11 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                         satsUsed++;
                     }
                 }
-                satellite.setText(String.valueOf(satsUsed) + "/" + String.valueOf(satsInView));
                 if (satsUsed == 0) {
                     data.setRunning(false);
+                    start.setText("GO!");
                     status.setText("");
                     stopService(new Intent(getBaseContext(), MyService.class));
-                    accuracy.setText("");
                     status.setVisibility(View.VISIBLE);
                     firstfix = true;
                 }
@@ -334,8 +309,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
     public void resetData(){
         time.stop();
-        maxSpeed.setText("");
-        averageSpeed.setText("");
         distance.setText("");
         time.setText("00:00:00");
         data = new Data(onGpsServiceUpdate);

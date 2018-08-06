@@ -34,12 +34,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Status: Offline" />
+                android:text="Статус: Не в сети" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Chalenngei vipolneno: 0" />
+                android:text="Выполненных челенджей: 0" />
         </LinearLayout>
     </LinearLayout>
 
@@ -65,17 +65,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Maximova Marina" />
+                android:text="Максимова Марина" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Status: running" />
+                android:text="Статус: На пробежке" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Chalenngei vipolneno: 5" />
+                android:text="Выполненных челенджей: 5" />
         </LinearLayout>
     </LinearLayout>
 
@@ -101,17 +101,17 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Lukachevskiy Petr" />
+                android:text="Лукачевский Петя" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Rang: Online" />
+                android:text="Статус: В сети" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="Chalenngei vipolneno: 6" />
+                android:text="Выполненных челенджей: 6" />
         </LinearLayout>
 
     </LinearLayout>

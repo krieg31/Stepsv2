@@ -2,6 +2,7 @@ package com.example.stepsv2;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,12 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +44,8 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private TextView status;
     private TextView currentSpeed;
     private TextView distance;
+    private TextView result;
+    private ConstraintLayout hide;
     private Chronometer time;
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
 
@@ -54,9 +60,20 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         data = new Data(onGpsServiceUpdate);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        hide = findViewById(R.id.hide);
         start = findViewById(R.id.Start);
 
-        stop = findViewById(R.id.Stop);
+        stop = findViewById(R.id.Stop);/*
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new ChangeProgressEvent(senddata));
+                Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+                startActivity(myIntent);
+                dialog.cancel();
+                dialog.dismiss();
+            }
+        });*/
 
         onGpsServiceUpdate = new Data.onGpsServiceUpdate() {
             @Override
@@ -138,6 +155,13 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             }
         });
     }
+    public void onHomeClick(View v) {
+        hide.setVisibility(View.GONE);
+        EventBus.getDefault().post(new ChangeProgressEvent(senddata));
+        Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
+        startActivity(myIntent);
+        resetData();
+    }
 
     public void onStartClick(View v) {
         if (!data.isRunning()) {
@@ -156,27 +180,13 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }
 
     public void onStopClick(View v) {
-        stopService(new Intent(getBaseContext(), MyService.class));
-        AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
-        builder.setTitle(R.string.result)
-                .setMessage(getString(R.string.you_run)+ distance.getText().toString());
-        builder.setTitle("Результат")
-                .setMessage("Ты пробежал : "+ senddata)
-                .setCancelable(false)
-                .setNegativeButton(R.string.toHome,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                EventBus.getDefault().post(new ChangeProgressEvent(senddata));
-                                Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
-                                startActivity(myIntent);
-                                dialog.cancel();
-                            }
-                        });
-        AlertDialog alert = builder.create();
-        alert.show();
-        resetData();
-    }
+        start.setEnabled(false);
+        stop.setEnabled(false);
+        hide.setVisibility(View.VISIBLE);
+        result=findViewById(R.id.textView3);
+        result=distance;
 
+    }
     @Override
     protected void onResume() {
         super.onResume();

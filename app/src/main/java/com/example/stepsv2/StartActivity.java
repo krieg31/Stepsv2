@@ -62,7 +62,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
         hide = findViewById(R.id.hide);
         start = findViewById(R.id.Start);
-
+        result=findViewById(R.id.textView3);
         stop = findViewById(R.id.Stop);/*
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,8 +183,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         start.setEnabled(false);
         stop.setEnabled(false);
         hide.setVisibility(View.VISIBLE);
-        result=findViewById(R.id.textView3);
-        result=distance;
+        result.setText(senddata+"m");
 
     }
     @Override

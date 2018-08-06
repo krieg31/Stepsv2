@@ -17,6 +17,8 @@ import android.widget.ImageView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
+import org.eazegraph.lib.charts.BarChart;
+import org.eazegraph.lib.models.BarModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -63,9 +65,12 @@ public class main_frag extends Fragment {
         profile.setVisibility(View.VISIBLE);
         profile.setBackgroundColor(Color.TRANSPARENT);
         arcProgress = view.findViewById(R.id.arc_progress);
+        BarChart graph = view.findViewById(R.id.graph);
 
-        ViewPager pager=view.findViewById(R.id.pager);
-        pager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        setgraph(graph);
+
+        //ViewPager pager=view.findViewById(R.id.pager);
+       // pager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
         EventBus.getDefault().register(this);
 
@@ -184,6 +189,17 @@ public class main_frag extends Fragment {
         editor.putInt(APP_PREFERENCES_CHALLENGE_MAX, maxarc);;
         editor.apply();
     }
-
+    public void setgraph(BarChart graph)
+    {
+        graph.setVisibility(View.VISIBLE);
+        graph.addBar(new BarModel(3000, Color.parseColor("#e0ae4b")));
+        graph.addBar(new BarModel(2000, Color.parseColor("#e0ae4b")));
+        graph.addBar(new BarModel(250, Color.parseColor("#e0ae4b")));
+        graph.addBar(new BarModel(700, Color.parseColor("#e0ae4b")));
+        graph.addBar(new BarModel(1000,  Color.parseColor("#e0ae4b")));
+        graph.addBar(new BarModel(4000, Color.parseColor("#e0ae4b")));
+        graph.addBar(new BarModel(3750,  Color.parseColor("#e0ae4b")));
+        graph.setBackgroundColor(Color.parseColor("#a1a79c"));
+    }
 
 }

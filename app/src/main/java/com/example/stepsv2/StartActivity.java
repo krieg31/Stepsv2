@@ -53,6 +53,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
 
     private boolean firstfix;
+    int senddata=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
                 averageSpeed.setText(s);
 
+                senddata+=Math.round(distanceTemp);
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 distance.setText(s);
@@ -170,11 +172,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         stopService(new Intent(getBaseContext(), MyService.class));
         AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
         builder.setTitle("Результат")
-                .setMessage("Ты пробежал : "+ distance.getText().toString())
+                .setMessage("Ты пробежал : "+ senddata)
                 .setCancelable(false)
                 .setNegativeButton("Домой",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                EventBus.getDefault().post(new ChangeProgressEvent(senddata));
                                 Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
                                 startActivity(myIntent);
                                 dialog.cancel();
@@ -330,9 +333,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }*/
 
     public void resetData(){
-        if(!distance.getText().toString().equals("")) {
-            EventBus.getDefault().post(new ChangeProgressEvent(0 + Math.round(Integer.valueOf(distance.getText().toString()))));
-        }
         time.stop();
         maxSpeed.setText("");
         averageSpeed.setText("");

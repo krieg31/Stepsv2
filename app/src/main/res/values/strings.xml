@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Steps v2</string>
+    <string name="app_name">RunGO</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Уведомления</string>
@@ -32,4 +32,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="start">Start!</string>
     <string name="speed">Скорость</string>
+    <string name="toHome">Домой</string>
+    <string name="result">Результат</string>
+    <string name="you_run">Ты пробежал :</string>
 </resources>

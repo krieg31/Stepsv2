@@ -158,10 +158,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     public void onStopClick(View v) {
         stopService(new Intent(getBaseContext(), MyService.class));
         AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+        builder.setTitle(R.string.result)
+                .setMessage(getString(R.string.you_run)+ distance.getText().toString());
         builder.setTitle("Результат")
                 .setMessage("Ты пробежал : "+ senddata)
                 .setCancelable(false)
-                .setNegativeButton("Домой",
+                .setNegativeButton(R.string.toHome,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 EventBus.getDefault().post(new ChangeProgressEvent(senddata));

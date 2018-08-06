@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
@@ -62,12 +63,10 @@ public class main_frag extends Fragment {
         profile.setVisibility(View.VISIBLE);
         profile.setBackgroundColor(Color.TRANSPARENT);
         arcProgress = view.findViewById(R.id.arc_progress);
-        BarChart graph = view.findViewById(R.id.graph);
-
-        setgraph(graph);
-
-        //ViewPager pager=view.findViewById(R.id.pager);
-       // pager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        FrameLayout frameLayout= view.findViewById(R.id.frameLayout2);
+        frameLayout.setBackgroundResource(R.drawable.box_src);
+        BarChart barChart= view.findViewById(R.id.graph);
+        setgraph(barChart);
 
         EventBus.getDefault().register(this);
 
@@ -183,17 +182,13 @@ public class main_frag extends Fragment {
         editor.putInt(APP_PREFERENCES_CHALLENGE_MAX, maxarc);;
         editor.apply();
     }
-    public void setgraph(BarChart graph)
-    {
-        graph.setVisibility(View.VISIBLE);
-        graph.addBar(new BarModel(3000, Color.parseColor("#e0ae4b")));
-        graph.addBar(new BarModel(2000, Color.parseColor("#e0ae4b")));
-        graph.addBar(new BarModel(250, Color.parseColor("#e0ae4b")));
-        graph.addBar(new BarModel(700, Color.parseColor("#e0ae4b")));
-        graph.addBar(new BarModel(1000,  Color.parseColor("#e0ae4b")));
-        graph.addBar(new BarModel(4000, Color.parseColor("#e0ae4b")));
-        graph.addBar(new BarModel(3750,  Color.parseColor("#e0ae4b")));
-        graph.setBackgroundColor(Color.parseColor("#a1a79c"));
+    public void setgraph(BarChart mBarChart){
+        mBarChart.addBar(new BarModel(2.3f, Color.parseColor("#e0ae4b")));
+        mBarChart.addBar(new BarModel(2.f,  Color.parseColor("#e0ae4b")));
+        mBarChart.addBar(new BarModel(3.3f, Color.parseColor("#e0ae4b")));
+        mBarChart.addBar(new BarModel(1.1f, Color.parseColor("#e0ae4b")));
+        mBarChart.addBar(new BarModel(2.7f, Color.parseColor("#e0ae4b")));
+        mBarChart.addBar(new BarModel(2.f,  Color.parseColor("#e0ae4b")));
+        mBarChart.addBar(new BarModel(0.4f, Color.parseColor("#e0ae4b")));
     }
-
 }

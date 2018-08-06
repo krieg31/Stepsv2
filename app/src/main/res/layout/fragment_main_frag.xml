@@ -107,7 +107,10 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Week Statistic"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="25sp"
+                    android:text="Weekly Statistics"
                     android:textColor="@color/colorAccent" />
 
                 <TextView
@@ -136,7 +139,6 @@
                     custom:egLegendHeight="0dp"
                     custom:egShowDecimal="false"
                     custom:egShowValues="false">
-
                 </org.eazegraph.lib.charts.BarChart>
             </FrameLayout>
 

@@ -157,7 +157,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }
     public void onHomeClick(View v) {
         hide.setVisibility(View.GONE);
-        EventBus.getDefault().post(new ChangeProgressEvent(senddata));
         Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
         startActivity(myIntent);
         resetData();
@@ -184,6 +183,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         stop.setEnabled(false);
         hide.setVisibility(View.VISIBLE);
         result.setText(senddata+"m");
+        EventBus.getDefault().post(new ChangeProgressEvent(senddata));
 
     }
     @Override

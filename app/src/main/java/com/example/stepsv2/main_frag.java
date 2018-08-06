@@ -92,8 +92,15 @@ public class main_frag extends Fragment {
             maxarc = mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0);
             arcProgress.setMax(maxarc);
         }
-
-
+        if ((mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_PROGRESS, 0) + "/" + mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0));
+        }
+        if ((mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(!mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText("0/"+mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0));
+        }
+        if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/100");
+        }
         if (mSettings.contains(APP_GRAPH)){
             try {
                 jsonArray = JSONSharedPreferences.loadJSONArray(getActivity().getApplicationContext(),APP_GRAPH, "graph");
@@ -174,13 +181,29 @@ public class main_frag extends Fragment {
         SharedPreferences.Editor editor=mSettings.edit();
         editor.putInt(APP_PREFERENCES_CHALLENGE_PROGRESS, progresum);
         editor.apply();
+        if ((mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_PROGRESS, 0) + "/" + mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0));
+        }
+        if ((mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(!mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText("0/"+mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0));
+        }
+        if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/0");}
     }
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void ChangeMaxEvent(challenge_frag.ChangeMaxEvent event) {
         maxarc=event.maxmessage;
-        SharedPreferences.Editor editor=mSettings.edit();;
-        editor.putInt(APP_PREFERENCES_CHALLENGE_MAX, maxarc);;
+        SharedPreferences.Editor editor=mSettings.edit();
+        editor.putInt(APP_PREFERENCES_CHALLENGE_MAX, maxarc);
         editor.apply();
+        if ((mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_PROGRESS, 0) + "/" + mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0));
+        }
+        if ((mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(!mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText("0/"+mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0));
+        }
+        if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
+            arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/100");}
     }
     public void setgraph(BarChart mBarChart){
         mBarChart.addBar(new BarModel(2.3f, Color.parseColor("#e0ae4b")));

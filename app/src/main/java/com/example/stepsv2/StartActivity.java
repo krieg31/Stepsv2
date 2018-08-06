@@ -44,6 +44,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
 
     private boolean firstfix;
+    int senddata=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
 
+                senddata+=Math.round(distanceTemp);
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 distance.setText(s);
@@ -156,12 +158,18 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     public void onStopClick(View v) {
         stopService(new Intent(getBaseContext(), MyService.class));
         AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+<<<<<<< HEAD
         builder.setTitle(R.string.result)
                 .setMessage(getString(R.string.you_run)+ distance.getText().toString())
+=======
+        builder.setTitle("Результат")
+                .setMessage("Ты пробежал : "+ senddata)
+>>>>>>> 1457e9eabb9a615f031745a489761507ac5b01d6
                 .setCancelable(false)
                 .setNegativeButton(R.string.toHome,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                EventBus.getDefault().post(new ChangeProgressEvent(senddata));
                                 Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
                                 startActivity(myIntent);
                                 dialog.cancel();
@@ -305,9 +313,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }*/
 
     public void resetData(){
-        if(!distance.getText().toString().equals("")) {
-            EventBus.getDefault().post(new ChangeProgressEvent(0 + Math.round(Integer.valueOf(distance.getText().toString()))));
-        }
         time.stop();
         distance.setText("");
         time.setText("00:00:00");

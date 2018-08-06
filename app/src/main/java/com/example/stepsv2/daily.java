@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.StackedBarChart;
@@ -30,6 +31,7 @@ public class daily extends Fragment {
     private int pageNumber;
     JSONArray jsonArray;
     int temp;
+    int sum=0;
 
     public static daily newInstance(int page) {
         daily fragment = new daily();
@@ -53,45 +55,31 @@ public class daily extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_daily, container, false);
-        ValueLineChart mCubicValueLineChart = view.findViewById(R.id.cubiclinechart);
         BarChart graph= view.findViewById(R.id.graph);
+        TextView totaldis = view.findViewById(R.id.totaldis);
         EventBus.getDefault().register(this);
 
         switch (pageNumber){
             case 0:
                 graph.setVisibility(View.VISIBLE);
-                mCubicValueLineChart.setVisibility(View.INVISIBLE);
-                graph.addBar(new BarModel(2.3f, 0xFF123456));
-                graph.addBar(new BarModel(2.f,  0xFF343456));
-                graph.addBar(new BarModel(3.3f, 0xFF563456));
-                graph.addBar(new BarModel(1.1f, 0xFF873F56));
-                graph.addBar(new BarModel(2.7f, 0xFF56B7F1));
-                graph.addBar(new BarModel(2.f,  0xFF343456));
-                graph.addBar(new BarModel(0.4f, 0xFF1FF4AC));
-                graph.addBar(new BarModel(4.f,  0xFF1BA4E6));
-                graph.setBackgroundColor(Color.parseColor("#ffffdf"));
+                graph.addBar(new BarModel(3000, Color.parseColor("#e0ae4b")));
+                graph.addBar(new BarModel(2000, Color.parseColor("#e0ae4b")));
+                graph.addBar(new BarModel(250, Color.parseColor("#e0ae4b")));
+                graph.addBar(new BarModel(700, Color.parseColor("#e0ae4b")));
+                graph.addBar(new BarModel(1000,  Color.parseColor("#e0ae4b")));
+                graph.addBar(new BarModel(4000, Color.parseColor("#e0ae4b")));
+                graph.addBar(new BarModel(3750,  Color.parseColor("#e0ae4b")));
+                graph.setBackgroundColor(Color.parseColor("#a1a79c"));
                 break;
             case 1:
-                mCubicValueLineChart.setVisibility(View.VISIBLE);
-                graph.setVisibility(View.INVISIBLE);
-                ValueLineSeries series = new ValueLineSeries();
-                series.setColor(0xFF56B7F1);
-                if (jsonArray!=null) {
-                    for (int i=0;i<jsonArray.length();i++){
-                        try {
-                            temp=jsonArray.getInt(i);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        series.addPoint(new ValueLinePoint(String.valueOf(i), temp));
-                    }
+                graph.setVisibility(View.VISIBLE);
+                for (int i=0;i<31;i++)
+                {
+                    graph.addBar(new BarModel(1000+i*100,Color.parseColor("#e0ae4b")));
+                    sum+=1000+i*100;
+                    totaldis.setText(""+sum);
                 }
-                mCubicValueLineChart.addSeries(series);
-                mCubicValueLineChart.startAnimation();
-                break;
-            case 2:
-                graph.setVisibility(View.INVISIBLE);
-                mCubicValueLineChart.setVisibility(View.INVISIBLE);
+                graph.setBackgroundColor(Color.parseColor("#f6ffff"));
                 break;
         }
         return view;

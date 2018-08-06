@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -56,8 +55,6 @@ public class main_frag extends Fragment {
 
         mSettings = this.getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        ImageView imageView = view.findViewById(R.id.imageView);
-        imageView.setBackgroundResource(R.drawable.main_kotik);
         start = view.findViewById(R.id.Start);
         profile = view.findViewById(R.id.profile_btn);
         profile.setVisibility(View.VISIBLE);
@@ -68,9 +65,6 @@ public class main_frag extends Fragment {
         pager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
         EventBus.getDefault().register(this);
-
-        AnimationDrawable mAnimationDrawable = (AnimationDrawable) imageView.getBackground();
-        mAnimationDrawable.start();
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,285 +1,251 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:materialdesign="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorAccent"
+    android:keepScreenOn="true"
+    materialdesign:layout_editor_absoluteY="50dp">
 
     <RelativeLayout
         android:id="@+id/toolbarSpeed"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="67dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/accuracy"
         android:layout_gravity="center"
-        android:background="@color/colorAccent"
-        android:elevation="5dp">
+        android:background="@color/colorPrimary"
+        android:elevation="5dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/currentSpeed"
-            android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="100sp"
+            android:text=""
             android:textColor="@android:color/white"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:textSize="100sp"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/titleMaxSpeed"
+        android:id="@+id/maxSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/toolbarSpeed"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:text="Макс. скорость"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="16dp"
+        android:text=""
         android:textColor="@android:color/black"
         android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/maxSpeed"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/toolbarSpeed"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp" />
-
-    <View
-        android:id="@+id/separator1"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimary"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/maxSpeed"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/titleAverageSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/separator1"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="Средняя скорость"
+        android:layout_alignTop="@+id/titleDistance"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="88dp"
+        android:text="SPEED"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/averageSpeed"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp" />
-
-    <View
-        android:id="@+id/separator2"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/averageSpeed"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
         android:id="@+id/titleDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/separator2"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="Пройдено"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="88dp"
+        android:layout_toEndOf="@+id/Stop"
+        android:text="KM"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/distance"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp" />
-
-    <View
-        android:id="@+id/separator3"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/distance"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
         android:id="@+id/titleTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/separator3"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_below="@+id/toolbarSpeed"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="Время"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
-
-    <Chronometer
-        android:id="@+id/time"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
-        android:layout_below="@id/separator3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp" />
-
-    <View
-        android:id="@+id/separator4"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/time"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleAccuracy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/separator4"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_alignStart="@+id/Start"
+        android:layout_below="@+id/titleSatellite"
         android:text="Точность"
         android:textColor="@android:color/black"
-        android:textSize="17sp" />
+        android:textSize="17sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/accuracy"
-        android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@android:color/black"
         android:layout_alignTop="@+id/titleAccuracy"
-        android:layout_marginRight="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_alignRight="@+id/separator5"
-        android:layout_alignEnd="@+id/separator5" />
-
-    <View
-        android:id="@+id/separator5"
-        android:layout_width="1dp"
-        android:layout_height="30dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/separator4"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginRight="20dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/titleSatellite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/separator4"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@id/separator5"
+        android:layout_alignEnd="@+id/Stop"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="126dp"
         android:text="Спутники"
+        android:textColor="@android:color/black"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/satellite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/titleSatellite"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:text=""
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
     <TextView
-        android:id="@+id/satellite"
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@android:color/black"
-        android:layout_alignTop="@+id/titleSatellite"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"/>
-
-    <View
-        android:id="@+id/separator6"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:elevation="1dp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/satellite"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
         android:id="@+id/status"
-        android:text="Waiting for fix"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:layout_marginTop="16dp"
+        android:layout_height="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Waiting for fix"
         android:textColor="@android:color/holo_red_dark"
-        android:layout_below="@+id/separator6"
-        android:visibility="invisible"
-        android:layout_centerHorizontal="true" />
+        android:textSize="15sp"
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/Start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/status"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/circle_button"
         android:onClick="onStartClick"
-        android:text="Start" />
+        android:text="Start"
+        fab:layout_constraintBottom_toTopOf="@+id/status"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/Stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/status"
         android:onClick="onStopClick"
-        android:text="Stop" />
+        android:text="Stop"
+        fab:layout_constraintBottom_toBottomOf="parent"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintHorizontal_bias="0.848"
+        fab:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+    <Chronometer
+        android:id="@+id/time"
+        android:layout_width="309dp"
+        android:layout_height="51dp"
+        android:layout_below="@+id/titleTime"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/titleTime" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="212dp"
+        android:layout_below="@+id/time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintHorizontal_bias="0.0"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/time"
+        fab:srcCompat="@drawable/eighth" />
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/titleDistance"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        fab:layout_constraintBottom_toTopOf="@+id/titleDistance"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintHorizontal_bias="0.83"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/imageView2"
+        fab:layout_constraintVertical_bias="0.277" />
+
+    <TextView
+        android:id="@+id/averageSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/titleAverageSpeed"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="40sp"
+        fab:layout_constraintBottom_toTopOf="@+id/titleAverageSpeed"
+        fab:layout_constraintEnd_toEndOf="parent"
+        fab:layout_constraintHorizontal_bias="0.2"
+        fab:layout_constraintStart_toStartOf="parent"
+        fab:layout_constraintTop_toBottomOf="@+id/imageView2"
+        fab:layout_constraintVertical_bias="1.0" />
+
+</android.support.constraint.ConstraintLayout>

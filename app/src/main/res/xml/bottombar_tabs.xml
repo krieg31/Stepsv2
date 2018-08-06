@@ -3,14 +3,14 @@
     <tab
         id="@+id/tab_home"
         icon="@drawable/ic_home_black_24dp"
-        title="Home" />
-    <tab
-        id="@+id/tab_history"
-        icon="@drawable/ic_dashboard_black_24dp"
-        title="Nearby" />
+        title="HOME" />
     <tab
         id="@+id/tab_challenge"
+        icon="@drawable/ic_dashboard_black_24dp"
+        title="CHALLENGE" />
+    <tab
+        id="@+id/tab_history"
         icon="@drawable/ic_notifications_black_24dp"
-        title="Friends" />
+        title="FRIENDS" />
 
 </tabs>

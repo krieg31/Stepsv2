@@ -31,6 +31,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Locale;
 
@@ -38,8 +40,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private SharedPreferences sharedPreferences;
     private LocationManager mLocationManager;
     private static Data data;
-    //private FloatingActionButton fab;
-    //private FloatingActionButton refresh;
     private Button start;
     private Button stop;
     private TextView satellite;
@@ -60,7 +60,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         setContentView(R.layout.activity_start);
 
         data = new Data(onGpsServiceUpdate);
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //setTitle("");
         start = findViewById(R.id.Start);
@@ -106,14 +105,14 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        satellite = (TextView) findViewById(R.id.satellite);
-        status = (TextView) findViewById(R.id.status);
-        accuracy = (TextView) findViewById(R.id.accuracy);
-        maxSpeed = (TextView) findViewById(R.id.maxSpeed);
-        averageSpeed = (TextView) findViewById(R.id.averageSpeed);
-        distance = (TextView) findViewById(R.id.distance);
-        time = (Chronometer) findViewById(R.id.time);
-        currentSpeed = (TextView) findViewById(R.id.currentSpeed);
+        satellite = findViewById(R.id.satellite);
+        status = findViewById(R.id.status);
+        accuracy = findViewById(R.id.accuracy);
+        maxSpeed = findViewById(R.id.maxSpeed);
+        averageSpeed = findViewById(R.id.averageSpeed);
+        distance = findViewById(R.id.distance);
+        time = findViewById(R.id.time);
+        currentSpeed = findViewById(R.id.currentSpeed);
 
         time.setText("00:00:00");
         time.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
@@ -168,18 +167,14 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }
 
     public void onStopClick(View v) {
-        resetData();
         stopService(new Intent(getBaseContext(), MyService.class));
         AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
         builder.setTitle("Результат")
-                .setMessage("Ты пробежал : "+ distance.getText())
+                .setMessage("Ты пробежал : "+ distance.getText().toString())
                 .setCancelable(false)
                 .setNegativeButton("Домой",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                if(distance.getText()!="") {
-                                    EventBus.getDefault().post(new ChangeProgressEvent(0 + Math.round(Integer.valueOf(distance.getText().toString()))));
-                                }
                                 Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
                                 startActivity(myIntent);
                                 dialog.cancel();
@@ -187,6 +182,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                         });
         AlertDialog alert = builder.create();
         alert.show();
+        resetData();
     }
 
     @Override
@@ -334,6 +330,9 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }*/
 
     public void resetData(){
+        if(!distance.getText().toString().equals("")) {
+            EventBus.getDefault().post(new ChangeProgressEvent(0 + Math.round(Integer.valueOf(distance.getText().toString()))));
+        }
         time.stop();
         maxSpeed.setText("");
         averageSpeed.setText("");

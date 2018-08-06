@@ -1,8 +1,11 @@
 package com.example.stepsv2;
 
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +17,19 @@ import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.StackedBarModel;
 import org.eazegraph.lib.models.ValueLinePoint;
 import org.eazegraph.lib.models.ValueLineSeries;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class daily extends Fragment {
 
     private int pageNumber;
+    JSONArray jsonArray;
+    int temp;
 
     public static daily newInstance(int page) {
         daily fragment = new daily();
@@ -44,6 +55,7 @@ public class daily extends Fragment {
         View view = inflater.inflate(R.layout.fragment_daily, container, false);
         ValueLineChart mCubicValueLineChart = view.findViewById(R.id.cubiclinechart);
         BarChart graph= view.findViewById(R.id.graph);
+        EventBus.getDefault().register(this);
 
         switch (pageNumber){
             case 0:
@@ -57,28 +69,23 @@ public class daily extends Fragment {
                 graph.addBar(new BarModel(2.f,  0xFF343456));
                 graph.addBar(new BarModel(0.4f, 0xFF1FF4AC));
                 graph.addBar(new BarModel(4.f,  0xFF1BA4E6));
-                graph.startAnimation();
+                graph.setBackgroundColor(Color.parseColor("#ffffdf"));
                 break;
             case 1:
                 mCubicValueLineChart.setVisibility(View.VISIBLE);
                 graph.setVisibility(View.INVISIBLE);
                 ValueLineSeries series = new ValueLineSeries();
                 series.setColor(0xFF56B7F1);
-                series.addPoint(new ValueLinePoint("Jan", 0f));
-                series.addPoint(new ValueLinePoint("Jan", 2.4f));
-                series.addPoint(new ValueLinePoint("Feb", 3.4f));
-                series.addPoint(new ValueLinePoint("Mar", .4f));
-                series.addPoint(new ValueLinePoint("Apr", 1.2f));
-                series.addPoint(new ValueLinePoint("Mai", 2.6f));
-                series.addPoint(new ValueLinePoint("Jun", 1.0f));
-                series.addPoint(new ValueLinePoint("Jul", 3.5f));
-                series.addPoint(new ValueLinePoint("Aug", 2.4f));
-                series.addPoint(new ValueLinePoint("Sep", 2.4f));
-                series.addPoint(new ValueLinePoint("Oct", 3.4f));
-                series.addPoint(new ValueLinePoint("Nov", .4f));
-                series.addPoint(new ValueLinePoint("Dec", 1.3f));
-                series.addPoint(new ValueLinePoint("Jan", 0f));
-
+                if (jsonArray!=null) {
+                    for (int i=0;i<jsonArray.length();i++){
+                        try {
+                            temp=jsonArray.getInt(i);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        series.addPoint(new ValueLinePoint(String.valueOf(i), temp));
+                    }
+                }
                 mCubicValueLineChart.addSeries(series);
                 mCubicValueLineChart.startAnimation();
                 break;
@@ -89,4 +96,15 @@ public class daily extends Fragment {
         }
         return view;
     }
+    @Override
+    public void onDestroyView ()
+    {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void sendstat(main_frag.sendstat event) {
+        jsonArray=event.jsonArray;
+    }
+
 }

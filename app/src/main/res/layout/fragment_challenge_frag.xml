@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f6ffff"
     tools:context=".challenge_frag">
 
 
     <Button
         android:id="@+id/hotChal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="366dp"
+        android:layout_height="108dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
@@ -23,12 +24,13 @@
 
     <Button
         android:id="@+id/chal1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Challenge 1"
+        android:layout_width="357dp"
+        android:layout_height="112dp"
+        android:layout_marginTop="8dp"
+        android:background="#bdbfbe"
         android:drawableLeft="@drawable/ic_settings_black_24dp"
         android:gravity="left|center_vertical"
+        android:text="Challenge 1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,24 +38,26 @@
 
     <Button
         android:id="@+id/chal2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="266dp"
+        android:layout_height="112dp"
+        android:background="#bdbfbe"
         android:layout_marginTop="8dp"
-        android:text="Challenge 2"
         android:drawableLeft="@drawable/ic_notifications_black_24dp"
         android:gravity="left|center_vertical"
+        android:text="Challenge 2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chal1" />
 
     <Button
         android:id="@+id/chal3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="266dp"
+        android:background="#bdbfbe"
+        android:layout_height="112dp"
         android:layout_marginTop="8dp"
-        android:text="Challenge 3"
         android:drawableLeft="@drawable/ic_dashboard_black_24dp"
         android:gravity="left|center_vertical"
+        android:text="Challenge 3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chal2" />

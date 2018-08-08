@@ -104,7 +104,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
 
-                senddata+=Math.round(distanceTemp);
+                senddata=(int) Math.round(distanceTemp);
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 distance.setText(s);

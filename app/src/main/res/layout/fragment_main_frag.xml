@@ -18,9 +18,11 @@
         custom:layout_constraintStart_toStartOf="parent">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
+            android:layout_width="389dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="14dp"
+            tools:layout_editor_absoluteY="88dp">
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/arc_progress"
@@ -32,9 +34,9 @@
                 android:layout_marginTop="24dp"
                 android:layout_x="58dp"
                 android:layout_y="77dp"
-                custom:arc_bottom_text="0/0"
                 app:arc_bottom_text_size="20sp"
                 app:arc_text_color="@android:color/black"
+                custom:arc_bottom_text="0/0"
                 custom:arc_finished_color="@color/colorPrimary"
                 custom:arc_max="100"
                 custom:arc_progress="0"
@@ -91,7 +93,7 @@
                 custom:layout_constraintStart_toStartOf="@+id/arc_progress"
                 custom:layout_constraintTop_toTopOf="@+id/arc_progress" />
 
-            <FrameLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/frameLayout2"
                 android:layout_width="0dp"
                 android:layout_height="173dp"
@@ -109,40 +111,56 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:textSize="25sp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="Weekly Statistics"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/totaldis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="3dp"
                     android:text="10,000"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="45sp" />
+                    android:textSize="35sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    app:layout_constraintVertical_bias="0.0" />
 
-                <org.eazegraph.lib.charts.BarChart
-                    android:id="@+id/graph"
-                    android:layout_width="168dp"
-                    android:layout_height="83dp"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="8dp"
-                    android:gravity="top"
-                    android:padding="10dp"
-                    android:background="@color/box"
-                    custom:egBarMargin="5dp"
-                    custom:egBarWidth="8dp"
-                    custom:egEnableScroll="false"
-                    custom:egFixedBarWidth="true"
-                    custom:egLegendHeight="0dp"
-                    custom:egShowDecimal="false"
-                    custom:egShowValues="false">
-                </org.eazegraph.lib.charts.BarChart>
-            </FrameLayout>
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barchart"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/totaldis"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    app:layout_constraintVertical_bias="0.937" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Total:"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    custom:layout_constraintStart_toStartOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <FrameLayout
                 android:id="@+id/frameLayout"
@@ -162,7 +180,7 @@
                     android:layout_height="match_parent"
                     android:layout_below="@+id/time"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp" />
             </FrameLayout>
 
         </android.support.constraint.ConstraintLayout>

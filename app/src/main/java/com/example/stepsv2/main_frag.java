@@ -1,6 +1,7 @@
 package com.example.stepsv2;
 
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +17,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 
-import org.eazegraph.lib.charts.BarChart;
-import org.eazegraph.lib.models.BarModel;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -26,8 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class main_frag extends Fragment {
@@ -63,10 +71,13 @@ public class main_frag extends Fragment {
         profile.setVisibility(View.VISIBLE);
         profile.setBackgroundColor(Color.TRANSPARENT);
         arcProgress = view.findViewById(R.id.arc_progress);
-        FrameLayout frameLayout= view.findViewById(R.id.frameLayout2);
+        ConstraintLayout frameLayout= view.findViewById(R.id.frameLayout2);
         frameLayout.setBackgroundResource(R.drawable.box_src);
-        BarChart barChart= view.findViewById(R.id.graph);
-        setgraph(barChart);
+
+        BarChart barChart = view.findViewById(R.id.barchart);
+        barChart.getDescription().setEnabled(false);
+        setlegend(barChart);
+        setdata(barChart);
 
         EventBus.getDefault().register(this);
 
@@ -205,13 +216,53 @@ public class main_frag extends Fragment {
         if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
             arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/100");}
     }
-    public void setgraph(BarChart mBarChart){
-        mBarChart.addBar(new BarModel(2.3f, Color.parseColor("#e0ae4b")));
-        mBarChart.addBar(new BarModel(2.f,  Color.parseColor("#e0ae4b")));
-        mBarChart.addBar(new BarModel(3.3f, Color.parseColor("#e0ae4b")));
-        mBarChart.addBar(new BarModel(1.1f, Color.parseColor("#e0ae4b")));
-        mBarChart.addBar(new BarModel(2.7f, Color.parseColor("#e0ae4b")));
-        mBarChart.addBar(new BarModel(2.f,  Color.parseColor("#e0ae4b")));
-        mBarChart.addBar(new BarModel(0.4f, Color.parseColor("#e0ae4b")));
+    public void setdata(com.github.mikephil.charting.charts.BarChart barChart){
+        String[] dninedeli = {
+                "пн","вт","ср","чт","пт","сб","вс"
+        };
+        List<BarEntry> entries = new ArrayList<>();
+        barChart.setDrawGridBackground(false);
+        entries.add(new BarEntry(0f, 150));
+        entries.add(new BarEntry(1f, 700));
+        entries.add(new BarEntry(2f, 389));
+        entries.add(new BarEntry(3f, 2400));
+
+        entries.add(new BarEntry(5f, 900));
+        entries.add(new BarEntry(6f, 4200));
+        BarDataSet set = new BarDataSet(entries, "BarDataSet");
+        set.setValueFormatter(new MyValueFormatter());
+        set.setValueTextSize(8);
+        // set.setHighlightEnabled(false);
+        //set.setDrawValues(false);
+
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setValueFormatter(new MyXAxisValueFormatter(dninedeli));
+
+        YAxis yAxis = barChart.getAxisLeft();
+        yAxis.setDrawGridLines(false);
+        yAxis.setDrawAxisLine(false);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.getAxisLeft().setEnabled(false);
+
+        set.setColors(new int[]{R.color.colorPrimary,R.color.colorPrimary,R.color.colorPrimary,R.color.colorPrimary,R.color.colorPrimary,R.color.colorPrimary,R.color.colorPrimary},getActivity().getApplicationContext());
+
+        barChart.setScaleEnabled(false);//zoom
+        barChart.setDragEnabled(false);//hz
+        barChart.setHighlightPerTapEnabled(false);//click
+        //barChart.setTouchEnabled(false);
+
+        BarData data = new BarData(set);
+        data.setBarWidth(0.5f);
+        barChart.setData(data);
+        barChart.setFitBars(true);
+        barChart.invalidate();
+    }
+    public void setlegend(com.github.mikephil.charting.charts.BarChart barChart){
+        Legend l = barChart.getLegend();
+        l.setEnabled(false);
     }
 }

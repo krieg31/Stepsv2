@@ -29,6 +29,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,6 +44,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private static Data data;
     private Button start;
     private Button stop;
+    private Button map_button;
     private TextView status;
     private TextView currentSpeed;
     private TextView distance;
@@ -48,7 +52,8 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private ConstraintLayout hide;
     private Chronometer time;
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
-
+    final MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.mapView);
+    final GoogleMap googleMap = mapFragment.getMap;
     private boolean firstfix;
     int senddata=0;
 
@@ -63,17 +68,8 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         hide = findViewById(R.id.hide);
         start = findViewById(R.id.Start);
         result=findViewById(R.id.textView3);
-        stop = findViewById(R.id.Stop);/*
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventBus.getDefault().post(new ChangeProgressEvent(senddata));
-                Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
-                startActivity(myIntent);
-                dialog.cancel();
-                dialog.dismiss();
-            }
-        });*/
+        stop = findViewById(R.id.Stop);
+        map_button = findViewById(R.id.map_button);
 
         onGpsServiceUpdate = new Data.onGpsServiceUpdate() {
             @Override
@@ -184,6 +180,10 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         hide.setVisibility(View.VISIBLE);
         result.setText(senddata+"m");
         EventBus.getDefault().post(new ChangeProgressEvent(senddata));
+
+    }
+
+    public void onMapBtnClick(View v) {
 
     }
     @Override

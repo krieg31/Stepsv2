@@ -8,13 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.github.mikephil.charting.charts.BarChart;
@@ -74,10 +71,14 @@ public class main_frag extends Fragment {
         ConstraintLayout frameLayout= view.findViewById(R.id.frameLayout2);
         frameLayout.setBackgroundResource(R.drawable.box_src);
 
+        CustomMarkerView markerView = new CustomMarkerView(getActivity().getApplicationContext(),R.layout.custom_marker_view);
+
         BarChart barChart = view.findViewById(R.id.barchart);
+        barChart.setMarker(markerView);
         barChart.getDescription().setEnabled(false);
         setlegend(barChart);
         setdata(barChart);
+
 
         EventBus.getDefault().register(this);
 
@@ -232,8 +233,9 @@ public class main_frag extends Fragment {
         BarDataSet set = new BarDataSet(entries, "BarDataSet");
         set.setValueFormatter(new MyValueFormatter());
         set.setValueTextSize(8);
-        // set.setHighlightEnabled(false);
-        //set.setDrawValues(false);
+        set.setHighlightEnabled(true);
+        set.setHighLightColor(R.color.text_color);
+        set.setDrawValues(false);
 
 
         XAxis xAxis = barChart.getXAxis();
@@ -252,7 +254,7 @@ public class main_frag extends Fragment {
 
         barChart.setScaleEnabled(false);//zoom
         barChart.setDragEnabled(false);//hz
-        barChart.setHighlightPerTapEnabled(false);//click
+       // barChart.setHighlightPerTapEnabled(true);//click
         //barChart.setTouchEnabled(false);
 
         BarData data = new BarData(set);
@@ -260,6 +262,7 @@ public class main_frag extends Fragment {
         barChart.setData(data);
         barChart.setFitBars(true);
         barChart.invalidate();
+        //barChart.setMaxVisibleValueCount(2);
     }
     public void setlegend(com.github.mikephil.charting.charts.BarChart barChart){
         Legend l = barChart.getLegend();

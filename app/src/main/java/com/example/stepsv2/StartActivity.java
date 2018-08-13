@@ -18,6 +18,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -29,18 +32,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Locale;
 
-public class StartActivity extends AppCompatActivity implements LocationListener, GpsStatus.Listener{
+public class StartActivity extends AppCompatActivity implements LocationListener, GpsStatus.Listener, OnMapReadyCallback {
     private SharedPreferences sharedPreferences;
     private LocationManager mLocationManager;
     private static Data data;
     private Button start;
     private Button stop;
+    private Button map_btn;
     private TextView status;
     private TextView currentSpeed;
     private TextView distance;
@@ -48,9 +60,14 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private ConstraintLayout hide;
     private Chronometer time;
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
-
     private boolean firstfix;
+    private boolean map_active = false;
     int senddata=0;
+    SupportMapFragment mapFragment;
+
+    GoogleMap map;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +80,9 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         hide = findViewById(R.id.hide);
         start = findViewById(R.id.Start);
         result=findViewById(R.id.textView3);
-        stop = findViewById(R.id.Stop);/*
+        stop = findViewById(R.id.Stop);
+        map_btn = findViewById(R.id.map_btn);
+        /*
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +93,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 dialog.dismiss();
             }
         });*/
-
         onGpsServiceUpdate = new Data.onGpsServiceUpdate() {
             @Override
             public void update() {
@@ -154,6 +172,11 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
             }
         });
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
     }
     public void onHomeClick(View v) {
         hide.setVisibility(View.GONE);
@@ -178,6 +201,19 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         }
     }
 
+    public void onMapClick(View v) {
+        if(!map_active){
+            map_btn.setText("CAT");
+            map_active=true;
+            Toast.makeText(this,"Map active",Toast.LENGTH_SHORT);
+        }
+        if(map_active) {
+            map_btn.setText("MAP");
+            map_active=false;
+            Toast.makeText(this,"Map not active",Toast.LENGTH_SHORT);
+        }
+    }
+
     public void onStopClick(View v) {
         start.setEnabled(false);
         stop.setEnabled(false);
@@ -186,6 +222,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         EventBus.getDefault().post(new ChangeProgressEvent(senddata));
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -353,5 +390,11 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             this.progressmessage = progressmessage;
         }
     }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        map.setMyLocationEnabled(true);
+    }
+
 }
 

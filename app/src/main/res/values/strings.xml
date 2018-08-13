@@ -35,4 +35,5 @@
     <string name="toHome">Домой</string>
     <string name="result">Результат</string>
     <string name="you_run">Ты пробежал :</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

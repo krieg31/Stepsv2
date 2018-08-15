@@ -16,15 +16,15 @@ import android.os.IBinder;
 public class MyService extends Service implements LocationListener, GpsStatus.Listener {
     private LocationManager mLocationManager;
 
-    Location lastlocation = new Location("last");
-    Data data;
+    private Location lastlocation = new Location("last");
+    private Data data;
 
-    double currentLon=0 ;
-    double currentLat=0 ;
-    double lastLon = 0;
-    double lastLat = 0;
+    private double currentLon=0 ;
+    private double currentLat=0 ;
+    private double lastLon = 0;
+    private double lastLat = 0;
 
-    PendingIntent contentIntent;
+    private PendingIntent contentIntent;
 
 
     @Override
@@ -76,7 +76,7 @@ public class MyService extends Service implements LocationListener, GpsStatus.Li
         }
     }
 
-    public void updateNotification(boolean asData){
+    private void updateNotification(boolean asData){
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setContentTitle(getString(R.string.running))
                 .setSmallIcon(R.drawable.my_tab_icon)

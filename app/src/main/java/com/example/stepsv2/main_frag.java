@@ -37,23 +37,26 @@ import java.util.Locale;
 
 public class main_frag extends Fragment {
 
-    public Button start;
-    public Button profile;
-    ArcProgress arcProgress;
-    int progress, maxarc ,progresum,todaysum;
+    private Button start;
+    private Button profile;
+    private ArcProgress arcProgress;
+    private int progress;
+    private int maxarc;
+    private int progresum;
+    private int todaysum;
 
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CHALLENGE_PROGRESS = "cprogress";
-    public static final String APP_PREFERENCES_CHALLENGE_MAX = "cmax";
-    public static final String APP_GRAPH= "graph";
-    public static final String APP_DATE= "date";
-    public static final int APP_TODAYRUN = 0;
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CHALLENGE_PROGRESS = "cprogress";
+    private static final String APP_PREFERENCES_CHALLENGE_MAX = "cmax";
+    private static final String APP_GRAPH= "graph";
+    private static final String APP_DATE= "date";
+    private static final int APP_TODAYRUN = 0;
     private SharedPreferences mSettings;
 
     Calendar calendar = Calendar.getInstance();
-    String date= new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(new Date());
-    JSONArray jsonArray =new JSONArray();
+    private String date= new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()).format(new Date());
+    private JSONArray jsonArray =new JSONArray();
 
     @Nullable
     @Override
@@ -176,11 +179,11 @@ public class main_frag extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    public static class sendstat {
+    static class sendstat {
 
         JSONArray jsonArray;
 
-        public sendstat(JSONArray jsonArray) {
+        sendstat(JSONArray jsonArray) {
             this.jsonArray = jsonArray;
         }
     }
@@ -217,7 +220,7 @@ public class main_frag extends Fragment {
         if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
             arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/100");}
     }
-    public void setdata(com.github.mikephil.charting.charts.BarChart barChart){
+    private void setdata(com.github.mikephil.charting.charts.BarChart barChart){
         String[] dninedeli = {
                 "пн","вт","ср","чт","пт","сб","вс"
         };
@@ -264,7 +267,7 @@ public class main_frag extends Fragment {
         barChart.invalidate();
         //barChart.setMaxVisibleValueCount(2);
     }
-    public void setlegend(com.github.mikephil.charting.charts.BarChart barChart){
+    private void setlegend(com.github.mikephil.charting.charts.BarChart barChart){
         Legend l = barChart.getLegend();
         l.setEnabled(false);
     }

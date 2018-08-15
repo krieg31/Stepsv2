@@ -3,7 +3,7 @@ package com.example.stepsv2;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
-public class MyXAxisValueFormatter implements IAxisValueFormatter {
+class MyXAxisValueFormatter implements IAxisValueFormatter {
 
     private String[] mValues;
 

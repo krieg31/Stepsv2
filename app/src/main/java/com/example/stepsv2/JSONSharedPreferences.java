@@ -7,7 +7,7 @@ import org.json.JSONException;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class JSONSharedPreferences {
+class JSONSharedPreferences {
     private static final String PREFIX = "json";
 
     public static void saveJSONArray(Context c, String prefName, String key, JSONArray array) {

@@ -7,7 +7,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.text.DecimalFormat;
 
 
-public class MyValueFormatter implements IValueFormatter {
+class MyValueFormatter implements IValueFormatter {
     private String[] mSuffix = new String[]{
             "м", "км", "mln","bln","trln"
     };

@@ -45,7 +45,8 @@
         <service
             android:name=".MyService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="" />
 
         <activity android:name=".ProfileActivity" />
         <!--

@@ -1,10 +1,7 @@
 package com.example.stepsv2;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,28 +15,18 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,10 +49,10 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
     private boolean firstfix;
     private boolean map_active = false;
-    int senddata=0;
-    SupportMapFragment mapFragment;
+    private int senddata=0;
+    private SupportMapFragment mapFragment;
 
-    GoogleMap map;
+    private GoogleMap map;
 
 
 
@@ -205,12 +192,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         if(!map_active){
             map_btn.setText("CAT");
             map_active=true;
-            Toast.makeText(this,"Map active",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"Map active",Toast.LENGTH_SHORT).show();
         }
         if(map_active) {
             map_btn.setText("MAP");
             map_active=false;
-            Toast.makeText(this,"Map not active",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"Map not active",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -355,7 +342,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         dialog.show();
     }*/
 
-    public void resetData(){
+    private void resetData(){
         time.stop();
         distance.setText("");
         time.setText("00:00:00");
@@ -386,7 +373,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
         public int progressmessage;
 
-        public ChangeProgressEvent(int progressmessage) {
+        ChangeProgressEvent(int progressmessage) {
             this.progressmessage = progressmessage;
         }
     }

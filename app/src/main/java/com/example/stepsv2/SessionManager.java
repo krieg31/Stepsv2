@@ -5,18 +5,18 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-public class SessionManager {
+class SessionManager {
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
 
     // Shared Preferences
-    SharedPreferences pref;
+    private SharedPreferences pref;
 
-    Editor editor;
-    Context _context;
+    private Editor editor;
+    private Context _context;
 
     // Shared pref mode
-    int PRIVATE_MODE = 0;
+    private int PRIVATE_MODE = 0;
 
     // Shared preferences file name
     private static final String PREF_NAME = "AndroidHiveLogin";

@@ -1,8 +1,9 @@
-package com.example.stepsv2;
+package com.example.stepsv2.graph;
 
 import android.content.Context;
 import android.widget.TextView;
 
+import com.example.stepsv2.R;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;

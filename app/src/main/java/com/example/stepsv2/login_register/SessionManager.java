@@ -1,11 +1,11 @@
-package com.example.stepsv2;
+package com.example.stepsv2.login_register;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-class SessionManager {
+public class SessionManager {
     // LogCat tag
     private static String TAG = SessionManager.class.getSimpleName();
 

@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.login_register;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-class SQLiteHandler extends SQLiteOpenHelper {
+public class SQLiteHandler extends SQLiteOpenHelper {
 
     private static final String TAG = SQLiteHandler.class.getSimpleName();
 

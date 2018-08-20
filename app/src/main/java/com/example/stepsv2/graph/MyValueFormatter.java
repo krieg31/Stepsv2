@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.graph;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IValueFormatter;
@@ -7,7 +7,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import java.text.DecimalFormat;
 
 
-class MyValueFormatter implements IValueFormatter {
+public class MyValueFormatter implements IValueFormatter {
     private String[] mSuffix = new String[]{
             "м", "км", "mln","bln","trln"
     };

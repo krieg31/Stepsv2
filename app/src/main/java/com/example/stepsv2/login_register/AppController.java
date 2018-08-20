@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.login_register;
 
 import android.app.Application;
 import android.text.TextUtils;

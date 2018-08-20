@@ -1,10 +1,15 @@
-package com.example.stepsv2;
+package com.example.stepsv2.activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
+
+import com.example.stepsv2.R;
+import com.example.stepsv2.fragments.challenge_frag;
+import com.example.stepsv2.fragments.main_frag;
+import com.example.stepsv2.fragments.second_frag;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;

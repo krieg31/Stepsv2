@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.fragments;
 
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
@@ -13,6 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.stepsv2.methods.JSONSharedPreferences;
+import com.example.stepsv2.activity.ProfileActivity;
+import com.example.stepsv2.R;
+import com.example.stepsv2.activity.StartActivity;
+import com.example.stepsv2.graph.CustomMarkerView;
+import com.example.stepsv2.graph.MyValueFormatter;
+import com.example.stepsv2.graph.MyXAxisValueFormatter;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;

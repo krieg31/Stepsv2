@@ -1,9 +1,9 @@
-package com.example.stepsv2;
+package com.example.stepsv2.graph;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
-class MyXAxisValueFormatter implements IAxisValueFormatter {
+public class MyXAxisValueFormatter implements IAxisValueFormatter {
 
     private String[] mValues;
 

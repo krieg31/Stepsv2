@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.methods;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -7,7 +7,7 @@ import org.json.JSONException;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-class JSONSharedPreferences {
+public class JSONSharedPreferences {
     private static final String PREFIX = "json";
 
     public static void saveJSONArray(Context c, String prefName, String key, JSONArray array) {

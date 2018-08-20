@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

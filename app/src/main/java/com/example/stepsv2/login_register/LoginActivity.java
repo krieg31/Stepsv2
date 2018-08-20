@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.login_register;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -21,11 +21,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.stepsv2.activity.MainActivity;
 import com.example.stepsv2.R;
 import com.example.stepsv2.AppConfig;
-import com.example.stepsv2.AppController;
-import com.example.stepsv2.SQLiteHandler;
-import com.example.stepsv2.SessionManager;
 
 public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();

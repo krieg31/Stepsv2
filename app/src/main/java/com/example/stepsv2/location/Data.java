@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.location;
 
 public class Data {
     private boolean isRunning;

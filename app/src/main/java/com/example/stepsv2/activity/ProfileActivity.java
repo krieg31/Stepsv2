@@ -1,10 +1,15 @@
-package com.example.stepsv2;
+package com.example.stepsv2.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.stepsv2.R;
+import com.example.stepsv2.login_register.LoginActivity;
+import com.example.stepsv2.login_register.SQLiteHandler;
+import com.example.stepsv2.login_register.SessionManager;
 
 public class ProfileActivity extends AppCompatActivity {
 

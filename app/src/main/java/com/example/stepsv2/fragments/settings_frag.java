@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

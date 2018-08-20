@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.location;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -12,6 +12,9 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+
+import com.example.stepsv2.R;
+import com.example.stepsv2.activity.StartActivity;
 
 public class MyService extends Service implements LocationListener, GpsStatus.Listener {
     private LocationManager mLocationManager;

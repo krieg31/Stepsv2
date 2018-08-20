@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -24,6 +24,9 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.stepsv2.location.Data;
+import com.example.stepsv2.location.MyService;
+import com.example.stepsv2.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;

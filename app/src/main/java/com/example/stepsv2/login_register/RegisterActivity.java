@@ -1,4 +1,4 @@
-package com.example.stepsv2;
+package com.example.stepsv2.login_register;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,6 +14,9 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.stepsv2.AppConfig;
+import com.example.stepsv2.activity.MainActivity;
+import com.example.stepsv2.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

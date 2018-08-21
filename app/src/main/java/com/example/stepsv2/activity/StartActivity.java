@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -27,13 +28,20 @@ import android.widget.Toast;
 import com.example.stepsv2.location.Data;
 import com.example.stepsv2.location.MyService;
 import com.example.stepsv2.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
 import java.util.Locale;
 
 public class StartActivity extends AppCompatActivity implements LocationListener, GpsStatus.Listener, OnMapReadyCallback {
@@ -51,6 +59,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private Chronometer time;
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
     private boolean firstfix;
+    private boolean first = true;
     private boolean map_active = false;
     private int senddata=0;
     private SupportMapFragment mapFragment;
@@ -116,6 +125,11 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 distance.setText(s);
+                if(data.getPositions().size()>0){
+                    List<LatLng> locationPoints = data.getPositions();
+                    refreshMap(map);
+                    drawRouteOnMap(map, locationPoints);
+                }
             }
         };
 
@@ -281,7 +295,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         if (location.hasAccuracy()) {
             SpannableString s = new SpannableString(String.format("%.0f", location.getAccuracy()) + "м");
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
-
             if (firstfix) {
                 status.setText("");
                 firstfix = false;
@@ -385,6 +398,37 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         map = googleMap;
         map.setMyLocationEnabled(true);
     }
-
+    private void markStartingLocationOnMap(GoogleMap map, LatLng location){
+        map.addMarker(new MarkerOptions().position(location));
+        map.moveCamera(CameraUpdateFactory.newLatLng(location));
+    }
+    private void startPolyline(GoogleMap map, LatLng location){
+        if(map == null){
+            Toast.makeText(this, "Karta ne gotova", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+        options.add(location);
+        Polyline polyline = map.addPolyline(options);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(location)
+                .zoom(16)
+                .build();
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+    private void drawRouteOnMap(GoogleMap map, List<LatLng> positions){
+        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
+        options.addAll(positions);
+        Polyline polyline = map.addPolyline(options);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(positions.get(positions.size()-1).latitude, positions.get(positions.size()-1).longitude))
+                .zoom(15)
+                .bearing(90)
+                .build();
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+    private void refreshMap(GoogleMap mapInstance){
+        mapInstance.clear();
+    }
 }
 

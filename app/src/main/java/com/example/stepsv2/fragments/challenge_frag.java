@@ -1,169 +1,145 @@
 package com.example.stepsv2.fragments;
 
-import android.os.Build;
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.ListView;
 
 
-import com.android.volley.RequestQueue;
+import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.Cache;
+import com.android.volley.Cache.Entry;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.stepsv2.AppConfig;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.stepsv2.R;
-import com.example.stepsv2.challenge.CardAdapter;
-import com.example.stepsv2.challenge.Challenge;
+import com.example.stepsv2.listviewfeed.listview.adapter.FeedListAdapter;
+import com.example.stepsv2.listviewfeed.listview.data.FeedItem;
+import com.example.stepsv2.login_register.AppController;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiresApi(api = Build.VERSION_CODES.M)
-public class challenge_frag extends Fragment implements RecyclerView.OnScrollChangeListener{
+public class challenge_frag extends Fragment{
 
-    //Creating a List of superheroes
-    private List<Challenge> listChallenges;
+    private static final String TAG = challenge_frag.class.getSimpleName();
+    private ListView listView;
+    private FeedListAdapter listAdapter;
+    private List<FeedItem> feedItems;
+    private String URL_FEED = "http://u234765589.hostingerapp.com/android_challenge_api/qwe.json";
 
-    //Creating Views
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adapter;
 
-    //Volley Request Queue
-    private RequestQueue requestQueue;
-
-    //The request counter to send ?page=1, ?page=2  requests
-    private int requestCount = 1;
-
+    @SuppressLint("NewApi")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_challenge_frag, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
-        recyclerView.setLayoutManager(layoutManager);
+        listView = view.findViewById(R.id.list);
 
-        //Initializing our superheroes list
-        listChallenges = new ArrayList<>();
-        requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+        feedItems = new ArrayList<FeedItem>();
 
-        //Calling method to get data to fetch data
-        getData(progressBar);
+        listAdapter = new FeedListAdapter(getActivity(), feedItems);
+        listView.setAdapter(listAdapter);
 
-        //Adding an scroll change listener to recyclerview
-        recyclerView.setOnScrollChangeListener(this);
-
-        //initializing our adapter
-        adapter = new CardAdapter(listChallenges, getActivity().getApplicationContext());
-
-        //Adding adapter to recyclerview
-        recyclerView.setAdapter(adapter);
-
-        return view;
-    }
-    public JsonArrayRequest getDataFromServer(int requestCount, final ProgressBar progressBar) {
-        //Initializing
-
-        //Displaying Progressbar
-        progressBar.setVisibility(View.VISIBLE);
-        //setProgressBarIndeterminateVisibility(true);
-
-        //JsonArrayRequest of volley
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(AppConfig.URL_CHALLENGE + String.valueOf(requestCount),
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        //Calling method parseData to parse the json response
-                        parseData(response);
-                        //Hiding the progressbar
-                        progressBar.setVisibility(View.GONE);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressBar.setVisibility(View.GONE);
-                        //If an error occurs that means end of the list has reached
-                        Toast.makeText(getActivity().getApplicationContext(), "No More Items Available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        //Returning the request
-        return jsonArrayRequest;
-    }
-
-    //This method will get data from the web api
-    private void getData(final ProgressBar progressBar) {
-        //Adding the method to the queue by calling the method getDataFromServer
-        requestQueue.add(getDataFromServer(requestCount,progressBar));
-        //Incrementing the request counter
-        requestCount++;
-    }
-
-    //This method will parse json data
-    private void parseData(JSONArray array) {
-        for (int i = 0; i < array.length(); i++) {
-            //Creating the superhero object
-            Challenge challenge = new Challenge();
-            JSONObject json = null;
+        // These two lines not needed,
+        // just to get the look of facebook (changing background color & hiding the icon)
+       /* getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3b5998")));
+        getActivity().getActionBar().setIcon(
+                new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+*/
+        // We first check for cached request
+        Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        Entry entry = cache.get(URL_FEED);
+        if (entry != null) {
+            // fetch the data from cache
             try {
-                //Getting json
-                json = array.getJSONObject(i);
-
-                //Adding data to the superhero object
-                challenge.setImageUrl(json.getString(AppConfig.TAG_IMAGE_URL));
-                challenge.setName(json.getString(AppConfig.TAG_NAME));
-                challenge.setActive(json.getString(AppConfig.TAG_ACTIVE));
-                challenge.setAim(json.getString(AppConfig.TAG_AIM));
-                challenge.setDescription(json.getString(AppConfig.TAG_DESCRIPTION));
-            } catch (JSONException e) {
+                String data = new String(entry.data, "UTF-8");
+                try {
+                    parseJsonFeed(new JSONObject(data));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            //Adding the superhero object to the list
-            listChallenges.add(challenge);
-        }
 
-        //Notifying the adapter that data has been added or changed
-        adapter.notifyDataSetChanged();
+        } else {
+            // making fresh volley request and getting json
+            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
+                    URL_FEED, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    VolleyLog.d(TAG, "Response: " + response.toString());
+                    if (response != null) {
+                        parseJsonFeed(response);
+                    }
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                }
+            });
+
+            // Adding request to volley request queue
+            AppController.getInstance().addToRequestQueue(jsonReq);
+        }
+        return view;
     }
 
-    //This method would check that the recyclerview scroll has reached the bottom or not
-    private boolean isLastItemDisplaying(RecyclerView recyclerView) {
-        if (recyclerView.getAdapter().getItemCount() != 0) {
-            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
-                return true;
-        }
-        return false;
-    }
+    private void parseJsonFeed(JSONObject response) {
+        try {
+            JSONArray feedArray = response.getJSONArray("feed");
 
-    //Overriden method to detect scrolling
-    @Override
-    public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        //Ifscrolled at last then
-        if (isLastItemDisplaying(recyclerView)) {
-            //Calling the method getdata again
-            ProgressBar progressBar = v.findViewById(R.id.progressBar1);
-            getData(progressBar);
+            for (int i = 0; i < feedArray.length(); i++) {
+                JSONObject feedObj = (JSONObject) feedArray.get(i);
+
+                FeedItem item = new FeedItem();
+                item.setId(feedObj.getInt("id"));
+                item.setName(feedObj.getString("name"));
+
+                // Image might be null sometimes
+                String image = feedObj.isNull("image") ? null : feedObj
+                        .getString("image");
+                item.setImge(image);
+                item.setStatus(feedObj.getString("status"));
+                item.setProfilePic(feedObj.getString("profilePic"));
+                item.setTimeStamp(feedObj.getString("timeStamp"));
+
+                // url might be null sometimes
+                String feedUrl = feedObj.isNull("url") ? null : feedObj
+                        .getString("url");
+                item.setUrl(feedUrl);
+
+                feedItems.add(item);
+            }
+
+            // notify data changes to list adapater
+            listAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
-
 
     public static class ChangeMaxEvent {
 
@@ -173,6 +149,4 @@ public class challenge_frag extends Fragment implements RecyclerView.OnScrollCha
             this.maxmessage = maxmessage;
         }
     }
-
-
 }

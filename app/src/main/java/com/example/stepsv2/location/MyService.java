@@ -15,6 +15,7 @@ import android.os.IBinder;
 
 import com.example.stepsv2.R;
 import com.example.stepsv2.activity.StartActivity;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MyService extends Service implements LocationListener, GpsStatus.Listener {
     private LocationManager mLocationManager;
@@ -63,7 +64,7 @@ public class MyService extends Service implements LocationListener, GpsStatus.Li
 
             if (location.getAccuracy() < distance){
                 data.addDistance(distance);
-
+                data.addPosition(new LatLng(currentLat, currentLon));
                 lastLat = currentLat;
                 lastLon = currentLon;
             }
@@ -82,7 +83,7 @@ public class MyService extends Service implements LocationListener, GpsStatus.Li
     private void updateNotification(boolean asData){
         Notification.Builder builder = new Notification.Builder(getBaseContext())
                 .setContentTitle(getString(R.string.running))
-                .setSmallIcon(R.drawable.my_tab_icon)
+                .setSmallIcon(R.drawable.ic_cat)
                 .setContentIntent(contentIntent);
 
         if(asData){

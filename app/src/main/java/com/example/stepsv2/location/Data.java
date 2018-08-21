@@ -1,5 +1,10 @@
 package com.example.stepsv2.location;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Data {
     private boolean isRunning;
     private long time;
@@ -11,6 +16,8 @@ public class Data {
     private double maxSpeed;
 
     private onGpsServiceUpdate onGpsServiceUpdate;
+
+    private List<LatLng> positions = new ArrayList<>();
 
     public interface onGpsServiceUpdate{
         void update();
@@ -30,6 +37,7 @@ public class Data {
         curSpeed = 0;
         maxSpeed = 0;
         timeStopped = 0;
+        positions.clear();
     }
 
     public Data(onGpsServiceUpdate onGpsServiceUpdate){
@@ -78,6 +86,14 @@ public class Data {
             maxSpeed = curSpeed;
         }
     }
+    public void addPosition(LatLng position){
+        positions.add(position);
+    }
+    public LatLng getLastPosition(){
+        return positions.get(positions.size()-1);
+    }
+
+    public List<LatLng> getPositions() { return positions;}
 
     public boolean isFirstTime() {
         return isFirstTime;

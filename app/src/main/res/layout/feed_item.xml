@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/feed_bg"
+    android:background="@color/colorAccent"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -14,13 +14,13 @@
         android:layout_marginTop="@dimen/feed_item_margin"
         android:background="@drawable/bg_parent_rounded_corner"
         android:orientation="vertical"
-        android:paddingBottom="70dp"
         android:paddingTop="@dimen/feed_item_padding_top_bottom" >
 
-        <com.example.stepsv2.listviewfeed.listview.FeedImageView
+        <com.example.stepsv2.challenge.FeedImageView
             android:id="@+id/feedImage1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:background="@color/white"
             android:scaleType="fitXY"
             android:visibility="visible" />

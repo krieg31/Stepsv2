@@ -1,8 +1,6 @@
 package com.example.stepsv2.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,20 +19,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.stepsv2.R;
-import com.example.stepsv2.listviewfeed.listview.adapter.FeedListAdapter;
-import com.example.stepsv2.listviewfeed.listview.data.FeedItem;
+import com.example.stepsv2.challenge.adapter.FeedListAdapter;
+import com.example.stepsv2.challenge.data.FeedItem;
 import com.example.stepsv2.login_register.AppController;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.stepsv2.listviewfeed.listview.data;
+package com.example.stepsv2.challenge.data;
 
 public class FeedItem {
     private int id;

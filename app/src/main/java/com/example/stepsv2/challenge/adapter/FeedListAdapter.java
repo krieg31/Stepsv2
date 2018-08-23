@@ -1,14 +1,10 @@
-package com.example.stepsv2.listviewfeed.listview.adapter;
+package com.example.stepsv2.challenge.adapter;
 
 
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.example.stepsv2.R;
-import com.example.stepsv2.listviewfeed.listview.FeedImageView;
-import com.example.stepsv2.listviewfeed.listview.data.FeedItem;
+import com.example.stepsv2.challenge.FeedImageView;
+import com.example.stepsv2.challenge.data.FeedItem;
 import com.example.stepsv2.login_register.AppController;
 
 public class FeedListAdapter extends BaseAdapter {

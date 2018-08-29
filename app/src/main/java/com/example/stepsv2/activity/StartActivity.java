@@ -55,7 +55,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private TextView currentSpeed;
     private TextView distance;
     private TextView result;
-    private ConstraintLayout hide;
     private Chronometer time;
     private Data.onGpsServiceUpdate onGpsServiceUpdate;
     private boolean firstfix;
@@ -76,9 +75,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         data = new Data(onGpsServiceUpdate);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        hide = findViewById(R.id.hide);
         start = findViewById(R.id.Start);
-        result=findViewById(R.id.textView3);
         stop = findViewById(R.id.Stop);
         map_btn = findViewById(R.id.map_btn);
         /*
@@ -182,17 +179,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         mapFragment.getMapAsync(this);
 
     }
-    public void onHomeClick(View v) {
-        hide.setVisibility(View.GONE);
-        Intent myIntent = new Intent(StartActivity.this, MainActivity.class);
-        startActivity(myIntent);
-        resetData();
-    }
 
     public void onStartClick(View v) {
         if (!data.isRunning()) {
             data.setRunning(true);
             start.setText("Pause");
+            stop.setEnabled(false);
             time.setBase(SystemClock.elapsedRealtime() - data.getTime());
             time.start();
             data.setFirstTime(true);
@@ -201,6 +193,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             data.setRunning(false);
             start.setText("GO!");
             status.setText("");
+            stop.setEnabled(true);
             stopService(new Intent(getBaseContext(), MyService.class));
         }
     }
@@ -211,7 +204,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             map_active=true;
             Toast.makeText(this,"Map active",Toast.LENGTH_SHORT).show();
         }
-        if(map_active) {
+        else if(map_active) {
             map_btn.setText("MAP");
             map_active=false;
             Toast.makeText(this,"Map not active",Toast.LENGTH_SHORT).show();
@@ -219,12 +212,9 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     }
 
     public void onStopClick(View v) {
-        start.setEnabled(false);
-        stop.setEnabled(false);
-        hide.setVisibility(View.VISIBLE);
-        result.setText(senddata+"m");
         EventBus.getDefault().post(new ChangeProgressEvent(senddata));
-
+        resetData();
+        finish();
     }
 
     @Override
@@ -287,6 +277,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Toast.makeText(this, "Destroy Start Activity",Toast.LENGTH_SHORT).show();
         stopService(new Intent(getBaseContext(), MyService.class));
     }
 
@@ -328,6 +319,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 }
                 if (satsUsed == 0) {
                     data.setRunning(false);
+                    stop.setEnabled(true);
                     start.setText("GO!");
                     status.setText("");
                     stopService(new Intent(getBaseContext(), MyService.class));
@@ -369,11 +361,17 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         return data;
     }
 
-    public void onBackPressed(){
+    /*public void onBackPressed(){
         Intent a = new Intent(Intent.ACTION_MAIN);
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
+    }*/
+
+    @Override
+    public void onBackPressed() {
+        if (data.isRunning()==false)
+            super.onBackPressed();
     }
 
     @Override
@@ -396,7 +394,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.setMyLocationEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            }
+            else{ map.setMyLocationEnabled(true);}
+        }
     }
     private void markStartingLocationOnMap(GoogleMap map, LatLng location){
         map.addMarker(new MarkerOptions().position(location));

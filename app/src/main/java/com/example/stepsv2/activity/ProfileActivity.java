@@ -1,6 +1,7 @@
 package com.example.stepsv2.activity;
 
 import android.content.Intent;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
         startActivity(intent);
-        finish();
+        finishAffinity();
     }
 }

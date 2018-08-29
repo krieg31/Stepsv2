@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -202,12 +203,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         if(!map_active){
             map_btn.setText("CAT");
             map_active=true;
-            Toast.makeText(this,"Map active",Toast.LENGTH_SHORT).show();
+            mapFragment.getView().setVisibility(View.VISIBLE);
         }
         else if(map_active) {
             map_btn.setText("MAP");
             map_active=false;
-            Toast.makeText(this,"Map not active",Toast.LENGTH_SHORT).show();
+            mapFragment.getView().setVisibility(View.INVISIBLE);
         }
     }
 
@@ -257,7 +258,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             mLocationManager.addGpsStatusListener(this);
         }
 
-
+        mapFragment.getView().setVisibility(View.INVISIBLE);
     }
 
 

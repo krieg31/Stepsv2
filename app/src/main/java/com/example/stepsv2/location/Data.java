@@ -10,6 +10,7 @@ public class Data {
     private long time;
     private long timeStopped;
     private boolean isFirstTime;
+    private boolean signal;
 
     private double distanceM;
     private double curSpeed;
@@ -71,7 +72,6 @@ public class Data {
     public double getAverageSpeedMotion(){
         long motionTime = time - timeStopped;
         double average;
-        String units;
         if (motionTime <= 0){
             average = 0.0;
         } else {
@@ -126,5 +126,9 @@ public class Data {
     public void setTime(long time) {
         this.time = time;
     }
+
+    public boolean isSignal() {return signal;}
+
+    public void setSignal(boolean x){signal = x;}
 }
 

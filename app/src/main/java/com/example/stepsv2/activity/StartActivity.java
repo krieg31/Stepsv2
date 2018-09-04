@@ -1,7 +1,10 @@
 package com.example.stepsv2.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 import com.example.stepsv2.location.Data;
 import com.example.stepsv2.location.MyService;
 import com.example.stepsv2.R;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -63,7 +67,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     private boolean map_active = false;
     private int senddata=0;
     private SupportMapFragment mapFragment;
-
+    private String currentTime;
     private GoogleMap map;
 
 
@@ -159,7 +163,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 String mm = m < 10 ? "0" + m : m + "";
                 String ss = s < 10 ? "0" + s : s + "";
                 chrono.setText(hh + ":" + mm + ":" + ss);
-
+                currentTime = hh + ":" + mm + ":" + ss;
                 if (data.isRunning()) {
                     chrono.setText(hh + ":" + mm + ":" + ss);
                 } else {
@@ -178,7 +182,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        mapFragment.getView().setVisibility(View.INVISIBLE);
     }
 
     public void onStartClick(View v) {
@@ -214,7 +218,12 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
     public void onStopClick(View v) {
         EventBus.getDefault().post(new ChangeProgressEvent(senddata));
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("distance", data.getDistance());
+        intent.putExtra("average", data.getAverageSpeed());
+        intent.putExtra("time", currentTime);
         resetData();
+        startActivity(intent);
         finish();
     }
 
@@ -244,7 +253,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             }
 
             if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                Toast.makeText(this,"Включите GPS",Toast.LENGTH_SHORT).show();
+                showGpsDisabledDialog();
             }
             mLocationManager.addGpsStatusListener(this);
             }
@@ -258,7 +267,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             mLocationManager.addGpsStatusListener(this);
         }
 
-        mapFragment.getView().setVisibility(View.INVISIBLE);
+
     }
 
 
@@ -278,7 +287,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Destroy Start Activity",Toast.LENGTH_SHORT).show();
         stopService(new Intent(getBaseContext(), MyService.class));
     }
 
@@ -302,7 +310,9 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - 4, s.length(), 0);
             currentSpeed.setText(s);
         }
-
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+        map.animateCamera(cameraUpdate);
     }
 
     public void onGpsStatusChanged(int event) {
@@ -319,11 +329,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                     }
                 }
                 if (satsUsed == 0) {
-                    data.setRunning(false);
-                    stop.setEnabled(true);
-                    start.setText("GO!");
-                    status.setText("");
-                    stopService(new Intent(getBaseContext(), MyService.class));
                     status.setVisibility(View.VISIBLE);
                     firstfix = true;
                 }
@@ -331,7 +336,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
 
             case GpsStatus.GPS_EVENT_STOPPED:
                 if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    Toast.makeText(this,R.string.please_enable_gps,Toast.LENGTH_LONG).show();
+                    showGpsDisabledDialog();
                 }
                 break;
             case GpsStatus.GPS_EVENT_FIRST_FIX:
@@ -339,17 +344,20 @@ public class StartActivity extends AppCompatActivity implements LocationListener
         }
     }
 
-   /* public void showGpsDisabledDialog(){
-        Dialog dialog = new Dialog(this, getResources().getString(R.string.gps_disabled), getResources().getString(R.string.please_enable_gps));
-
-        dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
+   public void showGpsDisabledDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton("Настройки местоположения", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
             }
         });
+        builder.setTitle("GPS отключен")
+                .setMessage("Для работы приложения откройте доступ к местоположению GPS")
+                .setCancelable(false);
+        AlertDialog dialog = builder.create();
         dialog.show();
-    }*/
+    }
 
     private void resetData(){
         time.stop();
@@ -361,13 +369,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
     public static Data getData() {
         return data;
     }
-
-    /*public void onBackPressed(){
-        Intent a = new Intent(Intent.ACTION_MAIN);
-        a.addCategory(Intent.CATEGORY_HOME);
-        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(a);
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -401,24 +402,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             }
             else{ map.setMyLocationEnabled(true);}
         }
-    }
-    private void markStartingLocationOnMap(GoogleMap map, LatLng location){
-        map.addMarker(new MarkerOptions().position(location));
-        map.moveCamera(CameraUpdateFactory.newLatLng(location));
-    }
-    private void startPolyline(GoogleMap map, LatLng location){
-        if(map == null){
-            Toast.makeText(this, "Karta ne gotova", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
-        options.add(location);
-        Polyline polyline = map.addPolyline(options);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(location)
-                .zoom(16)
-                .build();
-        map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
     private void drawRouteOnMap(GoogleMap map, List<LatLng> positions){
         PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);

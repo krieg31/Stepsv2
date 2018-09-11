@@ -16,11 +16,13 @@ public class ResultActivity extends AppCompatActivity {
     private TextView distance;
     private TextView speed;
     private TextView time;
+    private Intent shareIntent;
     private Button share;
     private double distanceM;
     private double speedM;
     private double timeM;
-    private ShareActionProvider mShareActionProvider;
+    private SpannableString s;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class ResultActivity extends AppCompatActivity {
             distanceM /= 1000.0;
             distanceUnits = " км";
         }
-        SpannableString s = new SpannableString(String.format("%.0f", speedM) + speedUnits);
+        s = new SpannableString(String.format("%.0f", speedM) + speedUnits);
         s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
         speed.setText(s);
         s = new SpannableString(String.format("%.3f", distanceM) + distanceUnits);
@@ -62,8 +64,10 @@ public class ResultActivity extends AppCompatActivity {
         finish();
     }
     public void onShareClick(View v) {
-        //TODO share with friends
-        Intent myShareIntent = new Intent(Intent.ACTION_SEND);
-        startActivity(myShareIntent);
+        shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Stepsv2");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Я пробежал " + s);
+        startActivity(Intent.createChooser(shareIntent, "Поделиться"));
     }
 }

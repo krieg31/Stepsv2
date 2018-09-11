@@ -52,6 +52,7 @@ import java.util.Locale;
 public class StartActivity extends AppCompatActivity implements LocationListener, GpsStatus.Listener, OnMapReadyCallback {
     private SharedPreferences sharedPreferences;
     private LocationManager mLocationManager;
+    private Location startLocation;
     private static Data data;
     private Button start;
     private Button stop;
@@ -310,9 +311,6 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             s.setSpan(new RelativeSizeSpan(0.25f), s.length() - 4, s.length(), 0);
             currentSpeed.setText(s);
         }
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
-        map.animateCamera(cameraUpdate);
     }
 
     public void onGpsStatusChanged(int event) {
@@ -401,6 +399,17 @@ public class StartActivity extends AppCompatActivity implements LocationListener
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
             }
             else{ map.setMyLocationEnabled(true);}
+        }
+        startLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (startLocation!=null){
+            double lat = startLocation.getLatitude();
+            double lon = startLocation.getLongitude();
+            LatLng startPoint = new LatLng(lat,lon);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(startPoint)
+                    .zoom(15)
+                    .build();
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
     private void drawRouteOnMap(GoogleMap map, List<LatLng> positions){

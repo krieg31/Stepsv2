@@ -1,8 +1,8 @@
 package com.example.stepsv2.challenge.data;
 
 public class FeedItem {
-    private int id;
-    private String name, status, image, profilePic, timeStamp, url;
+    public int id;
+    public String name, status, image, profilePic, timeStamp, url;
 
     public FeedItem() {
     }

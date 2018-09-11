@@ -212,7 +212,7 @@ public class main_frag extends Fragment {
         if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
             arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/0");}
     }
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    /*@Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void ChangeMaxEvent(challenge_frag.ChangeMaxEvent event) {
         maxarc=event.maxmessage;
         SharedPreferences.Editor editor=mSettings.edit();
@@ -226,7 +226,7 @@ public class main_frag extends Fragment {
         }
         if ((!mSettings.contains(APP_PREFERENCES_CHALLENGE_MAX)&&(mSettings.contains(APP_PREFERENCES_CHALLENGE_PROGRESS)))) {
             arcProgress.setBottomText(mSettings.getInt(APP_PREFERENCES_CHALLENGE_MAX, 0)+"/100");}
-    }
+    }*/
     private void setdata(com.github.mikephil.charting.charts.BarChart barChart){
         String[] dninedeli = {
                 "пн","вт","ср","чт","пт","сб","вс"

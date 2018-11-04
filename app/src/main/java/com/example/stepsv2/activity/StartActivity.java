@@ -209,6 +209,17 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             map_btn.setText("CAT");
             map_active=true;
             mapFragment.getView().setVisibility(View.VISIBLE);
+            startLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (startLocation!=null){
+                double lat = startLocation.getLatitude();
+                double lon = startLocation.getLongitude();
+                LatLng startPoint = new LatLng(lat,lon);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(startPoint)
+                        .zoom(15)
+                        .build();
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
         }
         else if(map_active) {
             map_btn.setText("MAP");
@@ -400,17 +411,7 @@ public class StartActivity extends AppCompatActivity implements LocationListener
             }
             else{ map.setMyLocationEnabled(true);}
         }
-        startLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (startLocation!=null){
-            double lat = startLocation.getLatitude();
-            double lon = startLocation.getLongitude();
-            LatLng startPoint = new LatLng(lat,lon);
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(startPoint)
-                    .zoom(15)
-                    .build();
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
+
     }
     private void drawRouteOnMap(GoogleMap map, List<LatLng> positions){
         PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
